@@ -11,10 +11,27 @@ var Especialidade = function(descricao, detalhamento) {
 $(document).ready(function(){
 	//alert('ok');
 	
+	
+	// OPERAÇÃO
+	$("body").on('click', '#operacao', function(){
+		
+		var operacao = $('#operacao').val().toLowerCase();
+		if(operacao == 'salvar'){
+			salvar();
+		}else if(operacao == 'alterar'){
+			alterar();
+		}else if(operacao == 'excluir'){
+			excluir();
+		}else if(operacao == 'listar'){
+			listar();
+		}
+	});
+	
 	// linkCadastrar - exibe o formulário de cadastro
 	$('#linkCadastrar').on('click', function(){
 	
 		$("#divBody").html(montarCadastro());
+		
 		
 	});//linkCadastrar
 	
@@ -29,18 +46,6 @@ $(document).ready(function(){
 	
 	// linkListar - exibe todos os mantenedores
 	$('#linkListar').click(function(){
-		
-		var e1 = new Especialidade('1','2');
-		var e2 = new Especialidade('3','4');
-		
-		var e = new Array();
-		e.push(e1);
-		e.push(e2);
-		//e.push(a);
-		//var j = JSON.stringify(e);
-		//alert(e.length);
-		//$('#divBody').html(montarLista.apply(Array, e));
-		//return;
 		
 		listar();
 	
@@ -99,52 +104,7 @@ $(document).ready(function(){
 	// buttonSalvar - salva cadastro de Especialidade
 	$('body').on('click', '#buttonSalvar', function(){
 		
-		$.ajax({
-		          url : "Especialidade",
-		          type : 'post',
-		          dataType : 'html',
-		          data : {
-		               operacao : "salvar",
-		               txtDescricao : $("[name = txtDescricao]").val(),
-		               txtDetalhamento : $("[name = txtDetalhamento]").val()
-		               
-		          },
-		          
-		          beforeSend : function(){
-		               $("#sucesso").html("<p align='center'>Carregando...</p>");
-		          }
-		     })
-		     .done(function(msg){
-		    	 //alert(msg);
-		    	 //var obj = JSON.parse(msg);
-		    	 //alert(obj);
-		    	 
-		    	 // verificar respostas
-		    	 if(msg != null){
-		    		 
-		    		 msg = makeMensagemAdvertencia(msg);
-		    		 $("#divBody").html(msg);
-		    		 $("#advertencia").html(""); // limpar
-		    	 }
-		    	 if(obj.advertencia != null){
-		    		 //alert(obj.advertencia);
-		    		 $("#modalAdvertencia .modal-body").append(obj.advertencia);
-		    		 $('#modalAdvertencia').modal('show');
-		    		 //$('#modalAdvertencia').modal({backdrop : 'static'});
-		    		 $('.modal-backdrop').css({
-		    			   'background-color' : '#FFE4C4',
-		    			   'opacity' : 0.4
-		    		 });
-		    		 
-		    		 $('#modalAdvertencia').on('hide.bs.modal', function(){
-		    			 $('#modalAdvertencia .modal-body').html("");
-		    			 //alert('fechou');
-		    		 });
-		    	 }
-		     })
-		     .fail(function(jqXHR, textStatus, msg){
-		          alert(msg + " Erro grave!!!");
-		     }); 
+		 
 	});//buttonSalvar
 	
 	
@@ -293,15 +253,16 @@ $(document).ready(function(){
 	     })
 	     .done(function(msg){
 	    	 
-	    	 objetos = JSON.parse(msg);
+	    	 var lista = JSON.parse(msg);
+	    	 var objetos = lista.lista;
 	    	 var o = new Array;
 	    	 
 	    	 
-	    	 for(var i = 0; i < objetos.lista.length; i++){
-	    		 o.push(objetos.lista[i]);
+	    	 for(var i = 0; i < objetos.length; i++){
+	    		 
 	    	 }
 	    	 
-	    	 msg = makeMensagemAdvertencia(o[5].descricao);
+	    	 msg = makeMensagemAdvertencia(objetos[0].descricao);
 	    	 $('#divBody').html(msg);
 	    	 
 	    	 var table = makeTable(
@@ -331,7 +292,57 @@ $(document).ready(function(){
 	          alert(msg);
 	     }); 
 	}
-	   
+
+	function salvar(){
+		
+		$.ajax({
+	          url : "Especialidade",
+	          type : 'post',
+	          dataType : 'html',
+	          data : {
+	               operacao : "salvar",
+	               txtDescricao : $("[name = txtDescricao]").val(),
+	               txtDetalhamento : $("[name = txtDetalhamento]").val()
+	               
+	          },
+	          
+	          beforeSend : function(){
+	               $("#sucesso").html("<p align='center'>Carregando...</p>");
+	          }
+	     })
+	     .done(function(msg){
+	    	 //alert(msg);
+	    	 //var obj = JSON.parse(msg);
+	    	 //alert(obj);
+	    	 
+	    	 // verificar respostas
+	    	 if(msg != null){
+	    		 
+	    		 msg = makeMensagemAdvertencia(msg);
+	    		 $("#divBody").html(msg);
+	    		 $("#advertencia").html(""); // limpar
+	    	 }
+	    	 if(obj.advertencia != null){
+	    		 //alert(obj.advertencia);
+	    		 $("#modalAdvertencia .modal-body").append(obj.advertencia);
+	    		 $('#modalAdvertencia').modal('show');
+	    		 //$('#modalAdvertencia').modal({backdrop : 'static'});
+	    		 $('.modal-backdrop').css({
+	    			   'background-color' : '#FFE4C4',
+	    			   'opacity' : 0.4
+	    		 });
+	    		 
+	    		 $('#modalAdvertencia').on('hide.bs.modal', function(){
+	    			 $('#modalAdvertencia .modal-body').html("");
+	    			 //alert('fechou');
+	    		 });
+	    	 }
+	     })
+	     .fail(function(jqXHR, textStatus, msg){
+	          alert(msg + " Erro grave!!!");
+	     });
+	}
+	
 /* FUNÇÕES DE MONTAGEM DE COPONENTES HTML*/
 	
 	// montar cadastro
@@ -342,12 +353,12 @@ $(document).ready(function(){
 		"<div class='col-md-8'>" +
 		"<h1 class='display-4'>Cadastro</h1>" +
 		"<ul class='list-group'>" +
-		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='txtDescricao' name='txtDescricao'>Descrição</label>" +
-		"<input class='form-control' type='text' placeholder='Digite aqui..'> </li>" +
-		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='txtDetalhamento' name='txtDetalhamento'>Detalhamento</label>" +
-		"<input class='form-control' type='text' placeholder='Digite aqui..'> </li>" +
+		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white'>Descrição</label>" +
+		"<input class='form-control' type='text' placeholder='Digite aqui..' id='txtDescricao' name='txtDescricao'> </li>" +
+		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white'>Detalhamento</label>" +
+		"<input class='form-control' type='text' placeholder='Digite aqui..' id='txtDetalhamento' name='txtDetalhamento'> </li>" +
 		"<li class='list-group-item form-inline'>" +
-		"<button class='btn btn-outline-success form-control' id='operacao'>Salvar</button>" +
+		"<button class='btn btn-outline-success form-control' id='operacao' value='salvar'>Salvar</button>" +
 		"<button class='btn btn-outline-warning form-control'>Limpar</button>" +
 		"</li>" +
 		"</ul>" +
@@ -372,7 +383,7 @@ $(document).ready(function(){
 	            "<li class='list-group-item form-inline'>" + 
 	            	"<label class='form-control bg-faded'>Códigio</label>" +
 		              "<input class='form-control mr-sm-2' name='txtCodigo' type='text' placeholder='Digite aqui..'>" +
-		              "<input type='submit' class='btn btn-outline-success my-2 my-sm-0' value='Procurar'>" + 
+		              "<input type='submit' class='btn btn-outline-success my-2 my-sm-0' id='operacao' value='Procurar'>" + 
 	              "</li>" +
 	          "</ul>" +
 	        "</div>" +

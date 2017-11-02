@@ -22,15 +22,15 @@ import dominio.Entidade;
 import dominio.Especialidade;
 
 public class VhEspecialidade extends AbstractVH {
+	
+	private Especialidade especialidade = new Especialidade();
 
 	@Override
 	public Entidade getEntidade(HttpServletRequest request) {
 
-		Especialidade especialidade = new Especialidade();
-
 		operacao = request.getParameter("operacao").toLowerCase();
 
-		System.out.println("teste");
+		System.out.println("sql");
 		if (operacao.equals("salvar") || operacao.equals("alterar")) {
 			String descricao = request.getParameter("txtDescricao");
 			String detalhamento = request.getParameter("txtDetalhamento");
@@ -51,21 +51,19 @@ public class VhEspecialidade extends AbstractVH {
 
 		PrintWriter out = response.getWriter();
 		JSONArray listJ = new JSONArray();
-		JSONObject objJ = new JSONObject();
+		JSONObject jObjeto = new JSONObject();
 
 		Especialidade esp = (Especialidade) this.entidade;
 
 		try {
-			objJ.put("lista", resultado);
+			jObjeto.put("lista", resultado);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		// resultado igual a nulo
-		// opera??o com sucesso ou controle da <div>
 		if (operacao.equals("salvar")) {
-			out.print("<h1>Deu Certo</h1>");
+			out.print("Especialidade: " + this.especialidade.getDescricao() + " salvo com sucesso!");
 			return;
 		} else if (operacao.equals("excluir")) {
 			request.setAttribute("mensagem", esp.getDescricao() + " exclu?do com sucesso!!!");
@@ -74,7 +72,7 @@ public class VhEspecialidade extends AbstractVH {
 		} else if (operacao.equals("listar")) {
 
 			listJ.put(resultado);
-			out.print(objJ);
+			out.print(jObjeto);
 			System.out.println("listando");
 			return;
 		}

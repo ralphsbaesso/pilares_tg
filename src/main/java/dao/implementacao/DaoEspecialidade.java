@@ -30,7 +30,7 @@ public class DaoEspecialidade implements Idao {
 		
 		Conexao.conectar();
 	        
-        sql = "INSERT INTO Especialidades"
+        sql = "INSERT INTO ESPECIALIDADES"
         		+ " (descricao,data_cadastro, codigo, detalhamento)"
         		+ " VALUES (?,?,?,?)";
         System.out.println(sql);
@@ -59,7 +59,7 @@ public class DaoEspecialidade implements Idao {
 		
 		Conexao.conectar();
 	        
-        sql = "UPDATE Especialidades"
+        sql = "UPDATE ESPECIALIDADES"
         		+ " SET descricao = ?, "
         		+ " detalhamento = ? "
         		+ " WHERE codigo = ?";
@@ -89,7 +89,7 @@ public class DaoEspecialidade implements Idao {
 		
 		Conexao.conectar();
         
-        sql = "DELETE FROM Especialidades "
+        sql = "DELETE FROM ESPECIALIDADES "
         		+ "WHERE  codigo = (?)";
         System.out.println(sql);
         
@@ -152,7 +152,7 @@ public class DaoEspecialidade implements Idao {
 		Especialidade esp;
 		
 		sql = "SELECT * "
-				+ "FROM especialidades "
+				+ "FROM ESPECIALIDADES "
 				+ "WHERE codigo = ?";
 		
 		// retorno
@@ -166,7 +166,7 @@ public class DaoEspecialidade implements Idao {
 		Especialidade esp;
 		
 		sql = "SELECT * "
-				+ "FROM especialidades "
+				+ "FROM ESPECIALIDADES "
 				+ "ORDER BY descricao ASC";
 		
 		
