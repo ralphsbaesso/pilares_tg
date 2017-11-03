@@ -32,6 +32,16 @@
   </nav>
   <h1 style="height:50px" class='bg-light'> - </h1>
   
+  <div class="py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="display-1">Especialidade</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div id='divBody'></div>
   
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -39,6 +49,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src='js/componentes.js'></script>
+  <script src='js/util.js'></script>
   <script src='js/especialidade.js'></script>
 </body>
 

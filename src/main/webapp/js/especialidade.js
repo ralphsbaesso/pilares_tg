@@ -253,34 +253,52 @@ $(document).ready(function(){
 	     })
 	     .done(function(msg){
 	    	 
-	    	 var lista = JSON.parse(msg);
-	    	 var objetos = lista.lista;
-	    	 var o = new Array;
+	    	 var objeto = JSON.parse(msg);
 	    	 
-	    	 
-	    	 for(var i = 0; i < objetos.length; i++){
-	    		 
-	    	 }
-	    	 
-	    	 msg = makeMensagemAdvertencia(objetos[0].descricao);
-	    	 $('#divBody').html(msg);
-	    	 
-	    	 var table = makeTable(
-	    	 				makeTableTBody(
-	    	 					makeTableTR(
-	    			 				makeTableTD("teste") + makeTableTD("teste")
-	    	 					)		
-	    			 		)
-	    	 );
-	    	 $('#divBody').append(table)
 	    	 // verificar respostas
-	    	 if(obj.sucesso != null){
-	    		 $("#sucesso").html(obj.sucesso);
-	    		 $("#advertencia").html(""); // limpar
-	    	 }
-	    	 if(obj.advertencia != null){
+	    	 if(objeto.status == 'sucesso'){
+	    		
+	    		 var especialidades = objeto.entidades;
+		    	 var especialidade;
+		    	 var tBody = "";
+		    	 var o = new Array;
+		    	 
+		    	 
+		    	 for(var i = 0; i < especialidades.length; i++){
+		    		 
+		    		 especialidade = especialidades[i];
+		    		 
+		    		 tBody += makeTableTBody(
+	 	 					makeTableTR(
+	    			 				makeTableTD(especialidade.id) +
+	    			 				makeTableTD(especialidade.codigo) +
+	    			 				makeTableTD(especialidade.descricao) +
+	    			 				makeTableTD(especialidade.detalhamento) +
+	    			 				makeTableTD(formatarData(especialidade.dataCadastro)) 
+	    	 					)		
+	    			 		);
+		    	 }
+		    	 
+		    	 var table = makeTable(
+		    			 		makeTableTHead(
+		    			 			makeTableTR(
+		    			 					makeTableTD('ID') +
+		    			 					makeTableTD('Código') +
+		    			 					makeTableTD('Descrição') +
+		    			 					makeTableTD('Detalhamento') +
+		    			 					makeTableTD('Data Cadastro') 
+		    			 			)
+		    			 		) + 
+		    	 				tBody +
+		    			 		makeTableTFoot("Quantidade de Especialidades cadastradas: " + especialidades.length, especialidades.length)
+		    	 );
+		    	 
+		    	 $('#divBody').html('');
+		    	 $('#divBody').append(table)
+	    	 }else if(objeto.status == "advertencia"){
+	    		 
 	    		//alert(obj.advertencia);
-	    		 $("#modalAdvertencia .modal-body").append(obj.advertencia);
+	    		 $("#modalAdvertencia .modal-body").append(objeto.mensagem);
 	    		 $('#modalAdvertencia').modal('show');
 	    		 $('#modalAdvertencia').on('hide.bs.modal', function(){
 	    			 $('#modalAdvertencia .modal-body').html("");
@@ -311,31 +329,17 @@ $(document).ready(function(){
 	          }
 	     })
 	     .done(function(msg){
-	    	 //alert(msg);
-	    	 //var obj = JSON.parse(msg);
-	    	 //alert(obj);
+	    	 
+			var objeto = JSON.parse(msg);
 	    	 
 	    	 // verificar respostas
-	    	 if(msg != null){
+	    	 if(objeto.status == 'sucesso'){
 	    		 
-	    		 msg = makeMensagemAdvertencia(msg);
-	    		 $("#divBody").html(msg);
-	    		 $("#advertencia").html(""); // limpar
-	    	 }
-	    	 if(obj.advertencia != null){
-	    		 //alert(obj.advertencia);
-	    		 $("#modalAdvertencia .modal-body").append(obj.advertencia);
-	    		 $('#modalAdvertencia').modal('show');
-	    		 //$('#modalAdvertencia').modal({backdrop : 'static'});
-	    		 $('.modal-backdrop').css({
-	    			   'background-color' : '#FFE4C4',
-	    			   'opacity' : 0.4
-	    		 });
+	    		 $('#divBody').html("");
+	    		 $('#divBody').append(makeMensagemSucesso(objeto.mensagem));
 	    		 
-	    		 $('#modalAdvertencia').on('hide.bs.modal', function(){
-	    			 $('#modalAdvertencia .modal-body').html("");
-	    			 //alert('fechou');
-	    		 });
+	    	 }else if(objeto.mensagem == 'advertencia'){
+	    		 alert(objeto.mensagem);
 	    	 }
 	     })
 	     .fail(function(jqXHR, textStatus, msg){
@@ -371,25 +375,23 @@ $(document).ready(function(){
 	// montar pesquisa
 	function montarPesquisa(){
 		return "<div class='py-5'>" +
-	    "<div class='container'>" +
-	      "<div class='row'>" +
-	        "<div class='col-md-12'>" +
-	          "<h1 class=''>Procura</h1>" +
-	        "</div>" +
-	      "</div>" +
-	      "<div class='row'>" +
-	        "<div class='col-md-8'>" +
-	          "<ul class='list-group'>" +
-	            "<li class='list-group-item form-inline'>" + 
-	            	"<label class='form-control bg-faded'>Códigio</label>" +
-		              "<input class='form-control mr-sm-2' name='txtCodigo' type='text' placeholder='Digite aqui..'>" +
-		              "<input type='submit' class='btn btn-outline-success my-2 my-sm-0' id='operacao' value='Procurar'>" + 
-	              "</li>" +
-	          "</ul>" +
-	        "</div>" +
-	      "</div>" +
-	    "</div>" +
-	  "</div>" ;
+		"<div class='container'>" +
+		"<div class='row'>" +
+		"<div class='col-md-8'>" +
+		"<h1 class='display-4'>Pesquisa</h1>" +
+		"<ul class='list-group'>" +
+		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white'>Código</label>" +
+		"<input class='form-control' type='text' placeholder='Digite aqui..' id='txtDescricao' name='txtDescricao'> </li>" +
+		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' >Descrição</label>" +
+		"<input class='form-control' type='text' placeholder='Digite aqui..'id='txtDetalhamento' name='txtDescricao'> </li>" +
+		"<li class='list-group-item form-inline'>" +
+		"<button class='btn btn-outline-success form-control btn-sm w-100' id='operacao'>Pesquisar</button>" +
+		"</li>" +
+		"</ul>" +
+		"</div>" +
+		"</div>" +
+		"</div>" +
+		"</div>" ;
 	}
 	
 	function montarAlterarExcluir(especialidade){

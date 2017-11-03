@@ -2,24 +2,16 @@ package web.viewhelper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 //import org.json.JSONArray;
 
 import dominio.Entidade;
 import dominio.Especialidade;
+import web.RespostaWeb;
 
 public class VhEspecialidade extends AbstractVH {
 	
@@ -27,10 +19,12 @@ public class VhEspecialidade extends AbstractVH {
 
 	@Override
 	public Entidade getEntidade(HttpServletRequest request) {
+		
+		if(this.especialidade == null)
+			especialidade = new Especialidade();
 
 		operacao = request.getParameter("operacao").toLowerCase();
 
-		System.out.println("sql");
 		if (operacao.equals("salvar") || operacao.equals("alterar")) {
 			String descricao = request.getParameter("txtDescricao");
 			String detalhamento = request.getParameter("txtDetalhamento");
@@ -50,31 +44,30 @@ public class VhEspecialidade extends AbstractVH {
 			throws IOException, ServletException {
 
 		PrintWriter out = response.getWriter();
-		JSONArray listJ = new JSONArray();
-		JSONObject jObjeto = new JSONObject();
+		RespostaWeb respWeb = new RespostaWeb();
 
 		Especialidade esp = (Especialidade) this.entidade;
 
-		try {
-			jObjeto.put("lista", resultado);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		if (operacao.equals("salvar")) {
-			out.print("Especialidade: " + this.especialidade.getDescricao() + " salvo com sucesso!");
+			
+			respWeb.setStatus("sucesso");
+			respWeb.setMensagem("Especialidade: " + this.especialidade.getDescricao() + " salvo com sucesso!");
+			out.print(respWeb.enviarObjetoWeb());
+			especialidade = null;
 			return;
+			
 		} else if (operacao.equals("excluir")) {
 			request.setAttribute("mensagem", esp.getDescricao() + " exclu?do com sucesso!!!");
 		} else if (operacao.equals("alterar")) {
 			request.setAttribute("mensagem", "Especialidade alterado com sucesso!");
 		} else if (operacao.equals("listar")) {
-
-			listJ.put(resultado);
-			out.print(jObjeto);
-			System.out.println("listando");
+			
+			respWeb.setStatus("sucesso");
+			respWeb.setEntidades(resultado);
+			out.print(respWeb.enviarObjetoWeb());
+			especialidade = null;
 			return;
+			
 		}
 
 		out.println("operacao: " + operacao);
