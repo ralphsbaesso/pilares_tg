@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.Entidade;
 import dominio.Especialidade;
-import web.RespostaWeb;
+import web.WebMensagem;
 
 public class VhEspecialidade extends AbstractVH {
 	
@@ -44,14 +44,14 @@ public class VhEspecialidade extends AbstractVH {
 			throws IOException, ServletException {
 
 		PrintWriter out = response.getWriter();
-		RespostaWeb respWeb = new RespostaWeb();
+		WebMensagem respWeb = new WebMensagem();
 
 		Especialidade esp = (Especialidade) this.entidade;
 
 		if (operacao.equals("salvar")) {
 			
 			respWeb.setStatus("sucesso");
-			respWeb.setMensagem("Especialidade: " + this.especialidade.getDescricao() + " salvo com sucesso!");
+			respWeb.addMensagem("Especialidade: " + this.especialidade.getDescricao() + " salvo com sucesso!");
 			out.print(respWeb.enviarObjetoWeb());
 			especialidade = null;
 			return;
