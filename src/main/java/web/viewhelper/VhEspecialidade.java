@@ -7,10 +7,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controle.AbstractMensagem;
+
 //import org.json.JSONArray;
 
 import dominio.Entidade;
 import dominio.Especialidade;
+import enuns.EStatus;
 import web.WebMensagem;
 
 public class VhEspecialidade extends AbstractVH {
@@ -40,7 +43,7 @@ public class VhEspecialidade extends AbstractVH {
 	}
 
 	@Override
-	public void setView(Object resultado, HttpServletRequest request, HttpServletResponse response)
+	public void setView(AbstractMensagem mensagem, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
 		PrintWriter out = response.getWriter();
@@ -50,10 +53,14 @@ public class VhEspecialidade extends AbstractVH {
 
 		if (operacao.equals("salvar")) {
 			
-			respWeb.setStatus("sucesso");
-			respWeb.addMensagem("Especialidade: " + this.especialidade.getDescricao() + " salvo com sucesso!");
-			out.print(respWeb.enviarObjetoWeb());
-			especialidade = null;
+			if(mensagem.getStatus() == EStatus.VERDE){
+				respWeb.setStatus(EStatus.VERDE);
+				respWeb.setMensagens("Especialidade: " + this.especialidade.getDescricao() + " salvo com sucesso!");
+				out.print(respWeb.enviarObjetoWeb());
+			}else{
+				respWeb.recebeObjetoMensagem(mensagem);
+				out.print(respWeb.enviarObjetoWeb());
+			}
 			return;
 			
 		} else if (operacao.equals("excluir")) {
@@ -62,10 +69,14 @@ public class VhEspecialidade extends AbstractVH {
 			request.setAttribute("mensagem", "Especialidade alterado com sucesso!");
 		} else if (operacao.equals("listar")) {
 			
-			respWeb.setStatus("sucesso");
-			respWeb.setEntidades(resultado);
-			out.print(respWeb.enviarObjetoWeb());
-			especialidade = null;
+			if(mensagem.getStatus() == EStatus.VERDE){
+				respWeb = (WebMensagem)mensagem;
+				out.print(respWeb.enviarObjetoWeb());
+			}else{
+				respWeb = (WebMensagem)mensagem;
+				out.print(respWeb.enviarObjetoWeb());
+			}
+			
 			return;
 			
 		}

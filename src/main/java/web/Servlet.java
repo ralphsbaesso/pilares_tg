@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controle.AbstractMensagem;
 import controle.Fachada;
 import controle.IFachada;
 import dominio.Entidade;
@@ -31,6 +32,7 @@ public class Servlet extends HttpServlet {
 	// atributos
 	private Map<String, ICommand> commands;
 	private Map<String, IViewHelper> vhs;
+	private AbstractMensagem mensagem;
 	
 	// construtor
 	public Servlet(){
@@ -70,17 +72,16 @@ public class Servlet extends HttpServlet {
 		String operacao = request.getParameter("operacao").toLowerCase();
 		
 		IFachada fachada = new Fachada();
-		Object obj = null;
 		
 		ICommand cmd = commands.get(operacao);
 		if(cmd != null){
-			obj = cmd.executar(entidade);
+			this.mensagem = cmd.executar(entidade);
 		}else{
 			//System.out.println("apenas controle visual");
 		}
 		
 		
-		vh.setView(obj, request, response);
+		vh.setView(this.mensagem, request, response);
 		
 	}
 }

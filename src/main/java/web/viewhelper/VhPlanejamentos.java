@@ -3,15 +3,16 @@ package web.viewhelper;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dominio.*;
+import controle.AbstractMensagem;
+import dominio.Entidade;
+import dominio.Planejamento;
+import dominio.Tarefa;
 
 public class VhPlanejamentos extends AbstractVH{
 
@@ -134,7 +135,7 @@ public class VhPlanejamentos extends AbstractVH{
 	}
 
 	@Override
-	public void setView(Object resultado, HttpServletRequest request, HttpServletResponse response)
+	public void setView(AbstractMensagem resultado, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 			Tarefa tarefa = (Tarefa)this.entidade;
@@ -143,7 +144,7 @@ public class VhPlanejamentos extends AbstractVH{
 			
 			
 			// eh uma lista?
-			if(resultado instanceof ArrayList){
+			if(resultado instanceof Object){
 				
 								
 				if(operacao.equals("listar")){

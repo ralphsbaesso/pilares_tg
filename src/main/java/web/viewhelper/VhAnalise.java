@@ -1,16 +1,14 @@
 package web.viewhelper;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controle.AbstractMensagem;
 import dominio.Apontamento;
 import dominio.Atividade;
 import dominio.Entidade;
@@ -57,7 +55,7 @@ public class VhAnalise extends AbstractVH{
 	}
 
 	@Override
-	public void setView(Object resultado, HttpServletRequest request, HttpServletResponse response)
+	public void setView(AbstractMensagem mensagem, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 			RequestDispatcher rd = request.getRequestDispatcher("analise.jsp");
@@ -66,8 +64,8 @@ public class VhAnalise extends AbstractVH{
 			Resultado r = (Resultado)this.entidade;
 			
 			// há mensagem em rusultado?
-			if(resultado != null){
-				request.setAttribute("mensagem", resultado);
+			if(mensagem != null){
+				request.setAttribute("mensagem", mensagem);
 			}else{
 				if(operacao.equals("salvar")){
 					

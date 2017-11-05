@@ -256,7 +256,7 @@ $(document).ready(function(){
 	    	 var objeto = JSON.parse(msg);
 	    	 
 	    	 // verificar respostas
-	    	 if(objeto.status == 'sucesso'){
+	    	 if(objeto.status == 'VERDE'){
 	    		
 	    		 var especialidades = objeto.entidades;
 		    	 var especialidade;
@@ -333,13 +333,23 @@ $(document).ready(function(){
 			var objeto = JSON.parse(msg);
 	    	 
 	    	 // verificar respostas
-	    	 if(objeto.status == 'sucesso'){
+	    	 if(objeto.status == 'VERDE'){
 	    		 
 	    		 $('#divBody').html("");
 	    		 $('#divBody').append(makeMensagemSucesso(objeto.mensagem));
 	    		 
-	    	 }else if(objeto.mensagem == 'advertencia'){
-	    		 alert(objeto.mensagem);
+	    	 }else if(objeto.status == 'VERMELHO'){
+	    		 
+	    		 var mensagem;
+	    		 
+	    		 for(var i = 0; i < objeto.mensagens.length; i++){
+	    			 mensagem += objeto.mensagens[i];
+	    			 mensagem += "</br>";
+	    		 }
+	    		 
+	    		 alert(objeto.mensagens);
+	    		 
+	    		 modalAdvertencia(mensagem);
 	    	 }
 	     })
 	     .fail(function(jqXHR, textStatus, msg){
@@ -473,7 +483,7 @@ $(document).ready(function(){
 	// montar modal advertência
 	function modalAdvertencia(mensagem){
 		
-		$("#divAdvertencia").html(
+		$("#divBody").html(
 		"<div class='modal fade' id='modalAdvertencia' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'>" +
 		  "<div class='modal-dialog' role='document'>" +
 		    "<div class='modal-content'>" +

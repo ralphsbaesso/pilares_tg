@@ -8,6 +8,7 @@ import java.util.Map;
 import dao.Idao;
 import dao.implementacao.*;
 import dominio.*;
+import enuns.EStatus;
 import negocio.*;
 
 public class Fachada implements IFachada {
@@ -16,6 +17,7 @@ public class Fachada implements IFachada {
 	private Map<String, List<IStrategy>> regrasNegociosSalvar;
 	private Map<String, List<IStrategy>> regrasNegociosExcluir;
 	private Map<String, Idao> daos;
+	private AbstractMensagem mensagem;
 	
 	//construtor
 	public Fachada(){
@@ -33,6 +35,7 @@ public class Fachada implements IFachada {
 		
 		// regras salvar especialidade
 		List<IStrategy> sttSalvarEspecialidade = new ArrayList();
+		sttSalvarEspecialidade.add(new VerificarNomeNullo());
 		sttSalvarEspecialidade.add(new InserirDataCadastro());
 		sttSalvarEspecialidade.add(new InserirCodigo());
 		
@@ -80,52 +83,58 @@ public class Fachada implements IFachada {
 	}
 
 	@Override
-	public String salvar(Entidade entidade) {
+	public AbstractMensagem salvar(Entidade entidade) {
 		StringBuilder sb = new StringBuilder();
 		String nomeEntidade = entidade.getClass().getName();
 		List<IStrategy> regrasEntidade = this.regrasNegociosSalvar.get(nomeEntidade);
 		
+		this.mensagem = new controleMensagem();
+		
 		String mensagem = null;
-		for(IStrategy st: regrasEntidade){
+			for(IStrategy st: regrasEntidade){
 			mensagem = st.processar(entidade);
-			validarMensagem(sb,mensagem);
+			this.mensagem.setMensagens(mensagem);
 		}
 		
-		if(sb.length() > 0)	//tem mensagem?
-			return sb.toString();
+		if(this.mensagem.getStatus() == EStatus.VERMELHO)	//tem mensagem?
+			return this.mensagem;
 		else{
 			Idao dao = daos.get(nomeEntidade);
 			if(dao != null){
 				if(!dao.salvar(entidade)){
-					return "Erro no salvar";
+					return this.mensagem;
 				}
 			}else{
 				//System.out.println("Erro na fachada no dao.salvar()");
 			}
 		}
 		
-		return null;
+		return this.mensagem;
 	}
 
 	@Override
-	public String alterar(Entidade entidade) {
+	public AbstractMensagem alterar(Entidade entidade) {
 		
 		Idao dao = daos.get(entidade.getClass().getName());
+		this.mensagem = new controleMensagem();
 		
 		if(!dao.alterar(entidade)){
 			System.out.println("ERRO Alterar");
-			return "Erro na Alteraï¿½ï¿½o!";
+			this.mensagem.setMensagens("Erro na alteração");
+			return this.mensagem;
 		}
 		
-		return null;
+		return this.mensagem;
 	}
 
 	@Override
-	public String excluir(Entidade entidade) {
+	public AbstractMensagem excluir(Entidade entidade) {
 
 		StringBuilder sb = new StringBuilder();
 		String nomeEntidade = entidade.getClass().getName();
 		List<IStrategy> regrasEntidade = this.regrasNegociosExcluir.get(nomeEntidade);
+		
+		this.mensagem = new controleMensagem();
 		
 		String mensagem = null;
 		
@@ -133,41 +142,37 @@ public class Fachada implements IFachada {
 		if(regrasEntidade != null){
 			for(IStrategy st: regrasEntidade){
 				mensagem = st.processar(entidade);
-				validarMensagem(sb,mensagem);
+				this.mensagem.setMensagens(mensagem);
 			}
 		}
 		
 		if(sb.length() > 0)	//tem mensagem?
-			return sb.toString();
+			return this.mensagem;
 		else{
 			Idao dao = daos.get(nomeEntidade);
 			if(dao != null){
 				if(!dao.excluir(entidade)){
-					return "Erro de EXCLUSï¿½O";
+					this.mensagem.setMensagens("Erro na exclusão");
+					return this.mensagem;
 				}
 			}else{
 				System.out.println("Erro na exclusï¿½o no fachada");
 			}
 		}
 		
-		return null;
+		return this.mensagem;
 	}
 
 	@Override
-	public List<Entidade> listar(Entidade entidade) {
+	public AbstractMensagem listar(Entidade entidade) {
 
+		this.mensagem = new controleMensagem();
+		
 		Idao dao = daos.get(entidade.getClass().getName());
 		
-		List<Entidade> entidades = dao.listar(entidade);
+		this.mensagem.setEntidades(dao.listar(entidade));
 		
-		return entidades;
-	}
-	
-	private void validarMensagem(StringBuilder sb, String msg){
-		if(msg != null){
-			sb.append(msg);
-			sb.append("\n");
-		}
+		return this.mensagem;
 	}
 
 }

@@ -6,13 +6,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dominio.*;
+import controle.AbstractMensagem;
+import dominio.Entidade;
 
 public interface IViewHelper {
 
 	public Entidade getEntidade(HttpServletRequest request);
 	
-	public void setView(Object resultado, 
+	public void setView(AbstractMensagem mensagem, 
 			HttpServletRequest request, HttpServletResponse response)
 					throws IOException, ServletException;
 

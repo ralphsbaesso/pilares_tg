@@ -1,13 +1,11 @@
 package controle;
 
-import java.util.List;
-
 import dominio.Entidade;
 
 public interface IFachada {
 
-	public String salvar(Entidade entidade);
-	public String alterar(Entidade entidade);
-	public String excluir(Entidade entidade);
-	public List<Entidade> listar(Entidade entidade);
+	public AbstractMensagem salvar(Entidade entidade);
+	public AbstractMensagem alterar(Entidade entidade);
+	public AbstractMensagem excluir(Entidade entidade);
+	public AbstractMensagem listar(Entidade entidade);
 }

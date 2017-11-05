@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controle.AbstractMensagem;
 import dominio.Atividade;
 import dominio.Entidade;
 import dominio.OrdemDeServico;
@@ -128,7 +129,7 @@ public class VhOrdemDeServico extends AbstractVH{
 	}
 
 	@Override
-	public void setView(Object resultado, HttpServletRequest request, HttpServletResponse response)
+	public void setView(AbstractMensagem resultado, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 			OrdemDeServico om = (OrdemDeServico)this.entidade;
@@ -138,7 +139,7 @@ public class VhOrdemDeServico extends AbstractVH{
 			
 			
 			// eh uma lista?
-			if(resultado instanceof ArrayList){
+			if(resultado instanceof Object){
 				
 				List<OrdemDeServico> lista = (List) resultado;
 								

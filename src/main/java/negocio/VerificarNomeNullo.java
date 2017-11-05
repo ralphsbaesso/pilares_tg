@@ -1,8 +1,8 @@
 package negocio;
 
 import dominio.Entidade;
+import dominio.Especialidade;
 import dominio.Mantenedor;
-import dominio.OrdemDeServico;
 
 public class VerificarNomeNullo implements IStrategy {
 
@@ -15,6 +15,13 @@ public class VerificarNomeNullo implements IStrategy {
 			// verificar se o atributo nome est? vazio ou se ? null
 			if(man.getNome().equals("") || man.getNome().equals(null)){
 				return "? obrigat?rio o preenchimento do nome!!!";
+			}
+		}
+		if(entidade instanceof Especialidade){
+			Especialidade esp = (Especialidade) entidade;
+			// verificar se o atributo nome est? vazio ou se ? null
+			if(esp.getDescricao().equals("") || esp.getDescricao().equals(null)){
+				return "É obrigatório o preenchimento da descrição";
 			}
 		}
 		return null;

@@ -1,7 +1,6 @@
 package web.viewhelper;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controle.AbstractMensagem;
 import dominio.Entidade;
 import dominio.Especialidade;
 import dominio.Mantenedor;
@@ -65,7 +65,7 @@ public class VhMantenedor extends AbstractVH{
 	}
 
 	@Override
-	public void setView(Object resultado, HttpServletRequest request, HttpServletResponse response)
+	public void setView(AbstractMensagem resultado, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 			Mantenedor man = (Mantenedor)this.entidade;
@@ -74,7 +74,7 @@ public class VhMantenedor extends AbstractVH{
 			request.setAttribute("ctrlDiv", operacao.toLowerCase());
 			
 			// eh uma lista?
-			if(resultado instanceof ArrayList){
+			if(true){
 				
 				List<Mantenedor> lista = (List) resultado;
 								

@@ -1,8 +1,9 @@
 package web.command;
 
+import controle.AbstractMensagem;
 import dominio.Entidade;
 
 public interface ICommand {
 	
-	public Object executar(Entidade entidade);
+	public AbstractMensagem executar(Entidade entidade);
 }
