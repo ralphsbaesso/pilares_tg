@@ -46,7 +46,7 @@ function makeTableTFoot(parametro, qtdade){
 	 return "<tfoot><tr><td colspan='" + qtdade + "'><label class='form-control bg-light'>" + parametro + "</label> </td></tr></tfoot>";
 }
 
-function makeTableTR(parametro){
+function makeTableTR(){
 	return "<tr>" + parametro + "</tr>";
 }
 
@@ -58,14 +58,18 @@ function makeTableTDDoublo(parametro1, parametro2){
 	return "<td colspan='2' class='form-inline'>" + parametro1 + " " + parametro2 +  "</td>";
 }
 
-function htmlButtonUpdate(){
-
-	return "<button class='btn btn-outline-warning form-control' name='operacao'>Alterar</button>";
+function htmlButtonUpdate(id){
 	
+	if(typeof id === undefined)
+		id = '';
+
+	return "<button id='" + id + "' class='btn btn-outline-warning form-control' name='operacao' id='buttonAlterar'>Alterar</button>";
 }
 
-function htmlButtonDelete(){
-
-	return "<button class='btn btn-outline-danger form-control' name='operacao'>Excluir</button>";
+function htmlButtonDelete(id){
 	
+	if(typeof id === undefined)
+		id = '';
+
+	return "<button id='" + id + "' class='btn btn-outline-danger form-control' name='operacao' id='buttonExcluir'>Excluir</button>";
 }

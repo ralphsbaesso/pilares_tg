@@ -52,60 +52,13 @@ $(document).ready(function(){
 	});//linkListar
 	
 	
-	
-	// btnConsultar - exibe o mantenedor selecionado
-	$('body').on('click', '.btnConsultar', function(){
-	
-		index = $('.btnConsultar').index(this);
-		id = $('.btnConsultar').eq(index).attr('id');
-		cpf = $('[name = txtCpf]').val();
-		//alert(cpf);
-		$.ajax({
-		          url : "Especialidade",
-		          type : 'post',
-		          dataType : 'html',
-		          data : {
-		               operacao : "listar",
-		               txtId : id,
-		               txtCpf : cpf
-		          },
-		          beforeSend : function(){
-		               //$("#sucesso").html("<p align='center'>Carregando...</p>");
-		          }
-		     })
-		     .done(function(msg){
-		    	  //alert(msg);
-		    	 var obj = JSON.parse(msg);
-		    	 
-		    	 // verificar respostas
-		    	 if(obj.sucesso != null){
-		    		 $("#sucesso").html(obj.sucesso);
-		    		 $("#advertencia").html(""); // limpar
-		    	 }
-		    	 if(obj.advertencia != null){
-		    		//alert(obj.advertencia);
-		    		 $("#modalAdvertencia .modal-body").append(obj.advertencia);
-		    		 $('#modalAdvertencia').modal('show');
-		    		 $('#modalAdvertencia').on('hide.bs.modal', function(){
-		    			 $('#modalAdvertencia .modal-body').html("");
-		    			 //alert('fechou');
-		    		 });
-		    	 }
-		     })
-		     .fail(function(jqXHR, textStatus, msg){
-		          alert(msg);
-		     }); 
-	
-	});//btnPesquisar
-	
-	
-	
-	
-	// buttonSalvar - salva cadastro de Especialidade
-	$('body').on('click', '#buttonSalvar', function(){
+	// buttonAlterar
+	$('body').on('click', '#buttonAlterar', function(){
 		
-		 
-	});//buttonSalvar
+		var id = $(this).html();
+		alert(id.attr('id'));
+	});
+	
 	
 	
 	// btnAlterar - alterar cadastro do mantenedor
