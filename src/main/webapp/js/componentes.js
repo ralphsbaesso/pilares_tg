@@ -53,3 +53,19 @@ function makeTableTR(parametro){
 function makeTableTD(parametro){
 	return "<td>" + parametro + "</td>";
 }
+
+function makeTableTDDoublo(parametro1, parametro2){
+	return "<td colspan='2' class='form-inline'>" + parametro1 + " " + parametro2 +  "</td>";
+}
+
+function htmlButtonUpdate(){
+
+	return "<button class='btn btn-outline-warning form-control' name='operacao'>Alterar</button>";
+	
+}
+
+function htmlButtonDelete(){
+
+	return "<button class='btn btn-outline-danger form-control' name='operacao'>Excluir</button>";
+	
+}

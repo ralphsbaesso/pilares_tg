@@ -274,7 +274,8 @@ $(document).ready(function(){
 	    			 				makeTableTD(especialidade.codigo) +
 	    			 				makeTableTD(especialidade.descricao) +
 	    			 				makeTableTD(especialidade.detalhamento) +
-	    			 				makeTableTD(formatarData(especialidade.dataCadastro)) 
+	    			 				makeTableTD(formatarData(especialidade.dataCadastro))+
+    			 					makeTableTDDoublo(htmlButtonUpdate(), htmlButtonDelete())
 	    	 					)		
 	    			 		);
 		    	 }
@@ -340,14 +341,14 @@ $(document).ready(function(){
 	    		 
 	    	 }else if(objeto.status == 'VERMELHO'){
 	    		 
-	    		 var mensagem;
+	    		 var mensagem = "";
 	    		 
 	    		 for(var i = 0; i < objeto.mensagens.length; i++){
 	    			 mensagem += objeto.mensagens[i];
 	    			 mensagem += "</br>";
 	    		 }
 	    		 
-	    		 alert(objeto.mensagens);
+	    		 //alert(objeto.mensagens);
 	    		 
 	    		 modalAdvertencia(mensagem);
 	    	 }
@@ -503,6 +504,10 @@ $(document).ready(function(){
 		
 		// abrir modal
 		 $('#modalAdvertencia').modal('show');
+		 $('.modal-backdrop').css({
+			   'background-color' : '#FFE4C4',
+			   'opacity' : 0.4
+		 });
 		 // fechando o modal
 		 $('#modalAdvertencia').on('hide.bs.modal', function(){
 			 $('#modalAdvertencia .modal-body').html("");

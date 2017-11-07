@@ -18,10 +18,12 @@ import web.WebMensagem;
 
 public class VhEspecialidade extends AbstractVH {
 	
-	private Especialidade especialidade = new Especialidade();
+	private Especialidade especialidade;
 
 	@Override
 	public Entidade getEntidade(HttpServletRequest request) {
+		
+		especialidade = new Especialidade();
 		
 		if(this.especialidade == null)
 			especialidade = new Especialidade();
@@ -70,10 +72,10 @@ public class VhEspecialidade extends AbstractVH {
 		} else if (operacao.equals("listar")) {
 			
 			if(mensagem.getStatus() == EStatus.VERDE){
-				respWeb = (WebMensagem)mensagem;
+				respWeb.recebeObjetoMensagem(mensagem);
 				out.print(respWeb.enviarObjetoWeb());
 			}else{
-				respWeb = (WebMensagem)mensagem;
+				respWeb.recebeObjetoMensagem(mensagem);
 				out.print(respWeb.enviarObjetoWeb());
 			}
 			
