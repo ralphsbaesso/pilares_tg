@@ -53,9 +53,10 @@ $(document).ready(function(){
 	
 	
 	// buttonAlterar
-	$('body').on('click', '#buttonAlterar', function(){
+	$('body').on('click', '.buttonAlterar', function(){
 		
-		var id = $(this).html();
+		
+		var id = $(this);
 		alert(id.attr('id'));
 	});
 	

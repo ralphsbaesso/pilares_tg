@@ -63,7 +63,7 @@ function htmlButtonUpdate(id){
 	if(typeof id === undefined)
 		id = '';
 
-	return "<button id='" + id + "' class='btn btn-outline-warning form-control' name='operacao' id='buttonAlterar'>Alterar</button>";
+	return "<button id='" + id + "' class='btn btn-outline-warning form-control buttonAlterar' name='operacao'>Alterar</button>";
 }
 
 function htmlButtonDelete(id){
