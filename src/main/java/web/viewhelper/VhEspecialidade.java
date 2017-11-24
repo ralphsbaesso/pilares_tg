@@ -2,6 +2,7 @@ package web.viewhelper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -56,8 +57,8 @@ public class VhEspecialidade extends AbstractVH {
 		if (operacao.equals("salvar")) {
 			
 			if(mensagem.getStatus() == EStatus.VERDE){
-				respWeb.setStatus(EStatus.VERDE);
-				respWeb.setMensagens("Especialidade: " + this.especialidade.getDescricao() + " salvo com sucesso!");
+				mensagem.setEntidade(this.especialidade);
+				respWeb.recebeObjetoMensagem(mensagem);
 				out.print(respWeb.enviarObjetoWeb());
 			}else{
 				respWeb.recebeObjetoMensagem(mensagem);
@@ -72,7 +73,9 @@ public class VhEspecialidade extends AbstractVH {
 		} else if (operacao.equals("listar")) {
 			
 			if(mensagem.getStatus() == EStatus.VERDE){
+				mensagem.setEntidades((List<Entidade>)mensagem.getEntidades());
 				respWeb.recebeObjetoMensagem(mensagem);
+				respWeb.setStatus(mensagem.getStatus());
 				out.print(respWeb.enviarObjetoWeb());
 			}else{
 				respWeb.recebeObjetoMensagem(mensagem);

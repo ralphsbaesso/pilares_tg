@@ -10,7 +10,7 @@ public class Conexao {
 //	static private final String usuario = "Pilares_tg";
 //	static private final String senha = "123";
 	static private final String url = "jdbc:mysql://127.0.0.1:3306/pilares_tg";
-	static private final String usuario = "root";
+	static private final String usuario = "pilares_tg";
 	static private final String senha = "";
     static public Connection conexao;
 	

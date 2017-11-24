@@ -9,12 +9,12 @@ descricao varchar(50),
 detalhes varchar(50),
 codigo varchar(50),
 especialidade_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-mantenedor_id REAL
+mantenedor_id integer
 );
 
 CREATE TABLE mantenedores_especialidades (
-especialidade_id REAL,
-mantenedor_id REAL,
+especialidade_id integer,
+mantenedor_id integer,
 FOREIGN KEY(especialidade_id) REFERENCES especialidades (especialidade_id)
 );
 
@@ -27,15 +27,15 @@ email varchar(50),
 sexo varchar(50),
 data_nascimento varchar(50),
 mantenedor_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-tipo_manutencao_id REAL,
-setor_id REAL
+tipo_manutencao_id integer,
+setor_id integer
 );
 
 CREATE TABLE Atividades (
 data_cadastro DATETIME,
 Descricao varchar(50),
 atividade_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-especialidade_id varchar(50),
+especialidade_id integer,
 FOREIGN KEY(especialidade_id) REFERENCES especialidades (especialidade_id)
 );
 
@@ -49,14 +49,14 @@ tarefa_id INTEGER AUTO_INCREMENT PRIMARY KEY
 );
 
 CREATE TABLE OS_tem_atividades (
-atividade_id REAL,
-os_id REAL,
+atividade_id integer,
+os_id integer,
 FOREIGN KEY(atividade_id) REFERENCES Atividades (atividade_id)
 );
 
 CREATE TABLE mantenedores_tem_permissoes (
-permissao_id REAL,
-mantenedor_id REAL,
+permissao_id integer,
+mantenedor_id integer,
 FOREIGN KEY(mantenedor_id) REFERENCES mantenedores (mantenedor_id)
 );
 
@@ -68,8 +68,8 @@ descricao varchar(50)
 );
 
 CREATE TABLE mantenedores_executam (
-acao_id REAL,
-mantenedor_id REAL
+acao_id integer,
+mantenedor_id integer
 );
 
 CREATE TABLE acoes (
@@ -81,8 +81,8 @@ flg_cancelado BIT,
 tipo varchar(50),
 acao_id INTEGER AUTO_INCREMENT PRIMARY KEY,
 data_final DATETIME,
-tarefa_id REAL,
-mantenedor_id REAL,
+tarefa_id integer,
+mantenedor_id integer,
 FOREIGN KEY(tarefa_id) REFERENCES Tarefas (tarefa_id),
 FOREIGN KEY(mantenedor_id) REFERENCES mantenedores (mantenedor_id)
 );
@@ -96,9 +96,9 @@ observacao varchar(50),
 data_limite DATETIME,
 os_id INTEGER AUTO_INCREMENT PRIMARY KEY,
 titulo varchar(50),
-equipamento_id REAL,
-tipo_manutencao_id REAL,
-mantenedor_id REAL,
+equipamento_id integer,
+tipo_manutencao_id integer,
+mantenedor_id integer,
 FOREIGN KEY(mantenedor_id) REFERENCES mantenedores (mantenedor_id)
 );
 
@@ -107,9 +107,9 @@ descricao varchar(50),
 criticidade varchar(50),
 equipamento_id INTEGER AUTO_INCREMENT PRIMARY KEY,
 data_cadastro DATETIME,
-tipo_equipamento_id REAL,
-setor_id REAL,
-mantenedor_id REAL,
+tipo_equipamento_id integer,
+setor_id integer,
+mantenedor_id integer,
 FOREIGN KEY(mantenedor_id) REFERENCES mantenedores (mantenedor_id)
 );
 
@@ -117,7 +117,7 @@ CREATE TABLE tipos_equipamento (
 data_cadastro DATETIME,
 descricao varchar(50),
 tipo_equipamento_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-mantenedor_id REAL,
+mantenedor_id integer,
 FOREIGN KEY(mantenedor_id) REFERENCES mantenedores (mantenedor_id)
 );
 
@@ -127,7 +127,7 @@ data_cadastro DATETIME,
 detalhamento varchar(50),
 codigo varchar(50),
 cc_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-mantenedor_id REAL,
+mantenedor_id integer,
 FOREIGN KEY(mantenedor_id) REFERENCES mantenedores (mantenedor_id)
 );
 
@@ -137,8 +137,8 @@ descricao varchar(50),
 data_cadastro DATETIME,
 codigo varchar(50),
 detalhamento varchar(50),
-mantenedor_id REAL,
-cc_id varchar(50),
+mantenedor_id integer,
+cc_id integer,
 FOREIGN KEY(mantenedor_id) REFERENCES mantenedores (mantenedor_id),
 FOREIGN KEY(cc_id) REFERENCES centros_de_custos (cc_id)
 );

@@ -224,7 +224,7 @@ $(document).ready(function(){
 		    		 
 		    		 tBody += makeTableTBody(
 	 	 					makeTableTR(
-	    			 				makeTableTD(especialidade.id) +
+	    			 				makeTableTD("id") +
 	    			 				makeTableTD(especialidade.codigo) +
 	    			 				makeTableTD(especialidade.descricao) +
 	    			 				makeTableTD(especialidade.detalhamento) +
@@ -291,7 +291,7 @@ $(document).ready(function(){
 	    	 if(objeto.status == 'VERDE'){
 	    		 
 	    		 $('#divBody').html("");
-	    		 $('#divBody').append(makeMensagemSucesso(objeto.mensagem));
+	    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + objeto.entidade.descricao + " salvo com sucesso!"));
 	    		 
 	    	 }else if(objeto.status == 'VERMELHO'){
 	    		 
@@ -438,7 +438,7 @@ $(document).ready(function(){
 	// montar modal advertência
 	function modalAdvertencia(mensagem){
 		
-		$("#divBody").html(
+		$("#divBody").prepend(
 		"<div class='modal fade' id='modalAdvertencia' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'>" +
 		  "<div class='modal-dialog' role='document'>" +
 		    "<div class='modal-content'>" +

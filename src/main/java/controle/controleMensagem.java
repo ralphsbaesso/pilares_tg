@@ -2,7 +2,6 @@ package controle;
 
 import java.util.List;
 
-import dominio.Entidade;
 import enuns.EStatus;
 
 public class controleMensagem extends AbstractMensagem{
@@ -16,10 +15,10 @@ public class controleMensagem extends AbstractMensagem{
 	}
 	
 	@Override
-	public void setEntidades(List<Entidade> entidades) {
-		this.entidades = entidades;
+	public void setEntidades(Object entidades) {
+		this.entidades = (List) entidades;
 		
-		if(this.entidades.size() == 0){
+		if(((List) this.entidades).size() == 0){
 			this.status = EStatus.VERMELHO;
 		}
 	}

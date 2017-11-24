@@ -14,14 +14,14 @@ public class VerificarNomeNullo implements IStrategy {
 			Mantenedor man = (Mantenedor) entidade;
 			// verificar se o atributo nome est? vazio ou se ? null
 			if(man.getNome().equals("") || man.getNome().equals(null)){
-				return "? obrigat?rio o preenchimento do nome!!!";
+				return "√â obrigat√≥rio o preenchimento do nome!!!";
 			}
 		}
 		if(entidade instanceof Especialidade){
 			Especialidade esp = (Especialidade) entidade;
 			// verificar se o atributo nome est? vazio ou se ? null
 			if(esp.getDescricao().equals("") || esp.getDescricao().equals(null)){
-				return "… obrigatÛrio o preenchimento da descriÁ„o";
+				return "√â obrigat√≥rio o preenchimento da descri√ß√£o";
 			}
 		}
 		return null;

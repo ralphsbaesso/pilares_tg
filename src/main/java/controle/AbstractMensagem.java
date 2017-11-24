@@ -7,9 +7,10 @@ import dominio.Entidade;
 import enuns.EStatus;
 
 public abstract class AbstractMensagem {
-
+	
+	protected Object entidade = new Entidade();
 	protected List<String> mensagens = new ArrayList();
-	protected List<Entidade> entidades = new ArrayList();
+	protected Object entidades = new ArrayList();
 	protected EStatus status = EStatus.VERDE;
 
 	public List<String> getMensagens() {
@@ -25,17 +26,25 @@ public abstract class AbstractMensagem {
 		this.mensagens.add(mensagem);
 	}
 
-	public List<Entidade> getEntidades() {
+	public Object getEntidades() {
 		return entidades;
 	}
+	
+	public Object getEntidade() {
+		return entidade;
+	}
+	
+	public void setEntidade(Object entidade) {
+		this.entidade = entidade;
+	}
 
-	public void setEntidades(List<Entidade> entidades) {
+	public void setEntidades(List<Object> entidades) {
 		this.entidades = entidades;
 	}
 
-	public void setEntidades(Entidade entidade) {
+	public void setEntidades(Object entidade) {
 
-		this.entidades.add(entidade);
+		((List)this.entidades).add(entidade);
 	}
 
 	public EStatus getStatus() {
@@ -47,7 +56,13 @@ public abstract class AbstractMensagem {
 	}
 	
 	public void recebeObjetoMensagem(AbstractMensagem obj){
-		this.entidades = obj.entidades;
+		try {
+			this.entidade = Class.forName(obj.entidade.getClass().getName()).cast(obj.entidade);
+			this.entidades = Class.forName(obj.entidades.getClass().getName()).cast(obj.entidades);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.mensagens = obj.mensagens;
 		this.status = obj.status;
 	}

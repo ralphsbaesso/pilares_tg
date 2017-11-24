@@ -84,7 +84,7 @@ public class Fachada implements IFachada {
 
 	@Override
 	public AbstractMensagem salvar(Entidade entidade) {
-		StringBuilder sb = new StringBuilder();
+		
 		String nomeEntidade = entidade.getClass().getName();
 		List<IStrategy> regrasEntidade = this.regrasNegociosSalvar.get(nomeEntidade);
 		
@@ -120,7 +120,7 @@ public class Fachada implements IFachada {
 		
 		if(!dao.alterar(entidade)){
 			System.out.println("ERRO Alterar");
-			this.mensagem.setMensagens("Erro na alteração");
+			this.mensagem.setMensagens("Erro na alteraï¿½ï¿½o");
 			return this.mensagem;
 		}
 		
@@ -152,7 +152,7 @@ public class Fachada implements IFachada {
 			Idao dao = daos.get(nomeEntidade);
 			if(dao != null){
 				if(!dao.excluir(entidade)){
-					this.mensagem.setMensagens("Erro na exclusão");
+					this.mensagem.setMensagens("Erro na exclusï¿½o");
 					return this.mensagem;
 				}
 			}else{

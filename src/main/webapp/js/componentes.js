@@ -46,7 +46,7 @@ function makeTableTFoot(parametro, qtdade){
 	 return "<tfoot><tr><td colspan='" + qtdade + "'><label class='form-control bg-light'>" + parametro + "</label> </td></tr></tfoot>";
 }
 
-function makeTableTR(){
+function makeTableTR(parametro){
 	return "<tr>" + parametro + "</tr>";
 }
 
