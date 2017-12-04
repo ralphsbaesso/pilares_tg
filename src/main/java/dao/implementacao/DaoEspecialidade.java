@@ -188,7 +188,7 @@ public class DaoEspecialidade implements Idao {
 			
 			while(resultset.next()){
 				esp = new Especialidade();
-				esp.setId(resultset.getInt("especialidade_id"));
+				esp.setId(resultset.getInt("id"));
 				esp.setDescricao(resultset.getString("descricao"));
 				esp.setCodigo(resultset.getString("codigo"));
 				esp.setDetalhamento(resultset.getString("detalhamento"));

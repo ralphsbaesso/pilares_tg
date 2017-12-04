@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import controle.AbstractMensagem;
+import controle.ITransportador;
 import dominio.Apontamento;
 import dominio.Entidade;
 import dominio.Tarefa;
@@ -141,7 +142,6 @@ public class VhApontamentos extends AbstractVH{
 		return tarefa;
 	}
 
-	@Override
 	public void setView(AbstractMensagem resultado, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -183,5 +183,12 @@ public class VhApontamentos extends AbstractVH{
 			}
 			
 			rd.forward(request, response);
+	}
+
+	@Override
+	public void setView(ITransportador mensagem, HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		// TODO Auto-generated method stub
+		
 	}	
 }

@@ -4,13 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import controle.ITransportador;
 import dao.Idao;
 import dao.implementacao.DaoMantenedor;
 import dominio.*;
+import enuns.ESemafaro;
 
 public class AtualizarStatusOs implements IStrategy {
 
-	@Override
 	public String processar(Entidade entidade) {
 		
 		if(entidade instanceof Tarefa){
@@ -56,5 +57,12 @@ public class AtualizarStatusOs implements IStrategy {
 		}
 		
 		return "Erro na atualiza??o do status da Ordem de Servi?o";
+	}
+
+
+	@Override
+	public void processar(ITransportador transportador) {
+		// TODO Auto-generated method stub
+		
 	}
 }

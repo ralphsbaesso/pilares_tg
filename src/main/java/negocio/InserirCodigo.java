@@ -5,14 +5,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
+import controle.ITransportador;
 import dao.Idao;
 import dao.implementacao.DaoMantenedor;
 import dominio.*;
+import enuns.ESemafaro;
 
 public class InserirCodigo implements IStrategy {
 
 	@Override
-	public String processar(Entidade entidade) {
+	public void processar(ITransportador transportador) {
+		
+		Entidade entidade = (Entidade) transportador.getEntidade();
 	
 		// ordem de serviço
 		if(entidade instanceof OrdemDeServico){
@@ -29,7 +33,7 @@ public class InserirCodigo implements IStrategy {
 					taf.setCodigo(gerarCodigo(taf));
 				}
 			}
-			return null;
+			return;
 		}
 		
 		// tarefa
@@ -45,17 +49,19 @@ public class InserirCodigo implements IStrategy {
 					plan.setCodigo(gerarCodigo(plan));
 				}
 			}
-			return null;
+			return;
 		}
 		
 		// especialidade
 		if( entidade instanceof Especialidade){
 			Especialidade especialidade = (Especialidade)entidade;
 			especialidade.setCodigo(gerarCodigo(entidade));
-			return null;
+			return;
 		}
 		
-		return "Erro na inserção do código";
+		transportador.setMensagens("Erro na inserção do código");
+		transportador.setSemafaro(ESemafaro.AMARELO);
+		return;
 	}
 	
 	private String gerarCodigo(Entidade ent){

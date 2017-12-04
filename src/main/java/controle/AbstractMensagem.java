@@ -4,20 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dominio.Entidade;
-import enuns.EStatus;
+import enuns.ESemafaro;
 
-public abstract class AbstractMensagem {
+public abstract class AbstractMensagem implements ITransportador{
 	
 	protected Object entidade = new Entidade();
 	protected List<String> mensagens = new ArrayList();
-	protected Object entidades = new ArrayList();
-	protected EStatus status = EStatus.VERDE;
+	protected List<Entidade> entidades = new ArrayList();
+	protected ESemafaro semafaro = ESemafaro.VERDE;
 
 	public List<String> getMensagens() {
 		return mensagens;
 	}
 
 	public void setMensagens(List<String> mensagens) {
+		if(mensagens == null)
+			return;
 		this.mensagens = mensagens;
 	}
 	public void setMensagens(String mensagem){
@@ -26,7 +28,7 @@ public abstract class AbstractMensagem {
 		this.mensagens.add(mensagem);
 	}
 
-	public Object getEntidades() {
+	public List<Entidade> getEntidades() {
 		return entidades;
 	}
 	
@@ -38,33 +40,33 @@ public abstract class AbstractMensagem {
 		this.entidade = entidade;
 	}
 
-	public void setEntidades(List<Object> entidades) {
+	public void setEntidades(List<Entidade> entidades) {
 		this.entidades = entidades;
 	}
 
 	public void setEntidades(Object entidade) {
 
-		((List)this.entidades).add(entidade);
+		this.entidades.add((Entidade) entidade);
 	}
 
-	public EStatus getStatus() {
-		return status;
+	public ESemafaro getSemafaro() {
+		return semafaro;
 	}
 
-	public void setStatus(EStatus status) {
-		this.status = status;
+	public void setSemafaro(ESemafaro semafaro) {
+		this.semafaro = semafaro;
 	}
 	
-	public void recebeObjetoMensagem(AbstractMensagem obj){
+	public void recebeObjetoMensagem(ITransportador obj){
 		try {
-			this.entidade = Class.forName(obj.entidade.getClass().getName()).cast(obj.entidade);
-			this.entidades = Class.forName(obj.entidades.getClass().getName()).cast(obj.entidades);
+			this.entidade = Class.forName(obj.getEntidade().getClass().getName()).cast(obj.getEntidade());
+			this.entidades = obj.getEntidades();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.mensagens = obj.mensagens;
-		this.status = obj.status;
+		this.mensagens = obj.getMensagens();
+		this.semafaro = obj.getSemafaro();
 	}
 
 }

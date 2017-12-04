@@ -1,8 +1,8 @@
 package negocio;
 
-import dominio.*;
+import controle.ITransportador;
 
 	public interface IStrategy {
-		public String processar(Entidade entidade);
+		public void processar(ITransportador transportador);
 		
 }

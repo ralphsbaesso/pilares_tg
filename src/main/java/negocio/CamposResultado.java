@@ -1,17 +1,12 @@
 package negocio;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
-
-import dao.Idao;
-import dao.implementacao.DaoMantenedor;
-import dominio.*;
+import controle.ITransportador;
+import dominio.Entidade;
+import dominio.Resultado;
 
 public class CamposResultado implements IStrategy {
 
-	@Override
+	
 	public String processar(Entidade entidade) {
 		
 		StringBuilder sb = new StringBuilder();
@@ -35,6 +30,13 @@ public class CamposResultado implements IStrategy {
 		}
 		
 		return "Erro da vali??o de Resultado";
+	}
+
+
+	@Override
+	public void processar(ITransportador transportador) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

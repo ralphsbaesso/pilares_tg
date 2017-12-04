@@ -4,13 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import controle.ITransportador;
 import dao.Idao;
 import dao.implementacao.DaoMantenedor;
 import dominio.*;
+import enuns.ESemafaro;
 
 public class VerificarData implements IStrategy {
 
-	@Override
 	public String processar(Entidade entidade) {
 		
 		// verifica data de ordem de servi?o
@@ -74,5 +75,11 @@ public class VerificarData implements IStrategy {
 		
 		return null;
 	} // processar
+
+	@Override
+	public void processar(ITransportador transportador) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

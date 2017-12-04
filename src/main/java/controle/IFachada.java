@@ -4,8 +4,8 @@ import dominio.Entidade;
 
 public interface IFachada {
 
-	public AbstractMensagem salvar(Entidade entidade);
-	public AbstractMensagem alterar(Entidade entidade);
-	public AbstractMensagem excluir(Entidade entidade);
-	public AbstractMensagem listar(Entidade entidade);
+	public ITransportador salvar(Entidade entidade);
+	public ITransportador alterar(Entidade entidade);
+	public ITransportador excluir(Entidade entidade);
+	public ITransportador listar(Entidade entidade);
 }

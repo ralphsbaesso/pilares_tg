@@ -2,6 +2,7 @@ package negocio;
 
 import java.text.SimpleDateFormat;
 
+import controle.ITransportador;
 import dao.Idao;
 import dao.implementacao.DaoOrdemDeServico;
 import dominio.Apontamento;
@@ -11,10 +12,10 @@ import dominio.OrdemDeServico;
 import dominio.Planejamento;
 import dominio.Resultado;
 import dominio.Tarefa;
+import enuns.ESemafaro;
 
 public class ConsultarOrdemDeServico implements IStrategy {
 
-	@Override
 	public String processar(Entidade entidade) {
 		
 		Resultado resultado = (Resultado)entidade;
@@ -245,6 +246,13 @@ public class ConsultarOrdemDeServico implements IStrategy {
 				}
 			}
 		}
+	}
+
+
+	@Override
+	public void processar(ITransportador transportador) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

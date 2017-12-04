@@ -1,9 +1,9 @@
 package web.command;
 
-import controle.AbstractMensagem;
+import controle.ITransportador;
 import dominio.Entidade;
 
 public interface ICommand {
 	
-	public AbstractMensagem executar(Entidade entidade);
+	public ITransportador executar(Entidade entidade);
 }

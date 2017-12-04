@@ -8,171 +8,97 @@ import java.util.Map;
 import dao.Idao;
 import dao.implementacao.*;
 import dominio.*;
-import enuns.EStatus;
+import enuns.ESemafaro;
 import negocio.*;
+import negocio.mapadenegocio.IMapaDeNegocio;
+import negocio.mapadenegocio.MapaEspecialidade;
 
 public class Fachada implements IFachada {
 	
 	//atributos
-	private Map<String, List<IStrategy>> regrasNegociosSalvar;
-	private Map<String, List<IStrategy>> regrasNegociosExcluir;
-	private Map<String, Idao> daos;
-	private AbstractMensagem mensagem;
+	private Map<String, IMapaDeNegocio> mapaEstrategias = new HashMap();
+	private Map<String, Idao> mapaDao = new HashMap();
+	private TransportadorFachada transportador = new TransportadorFachada();
+	private List<IStrategy> estrategias;
 	
 	//construtor
+	/**
+	 * construtor
+	 * Carrega todos os mapas de estratégias
+	 */
 	public Fachada(){
-		regrasNegociosSalvar = new HashMap();
-		regrasNegociosExcluir = new HashMap();
-		daos = new HashMap();
-		
-		// REGRAS PARA SALVAR
-		// regras de negocios salvar mantenedor
-		List<IStrategy> sttSalvarMantenedor = new ArrayList();
-		sttSalvarMantenedor.add(new InserirDataCadastro());
-		sttSalvarMantenedor.add(new VerificarNomeNullo());
-		sttSalvarMantenedor.add(new VerificarEspecialidade());
-		sttSalvarMantenedor.add(new VerificarCpfExistente());
-		
-		// regras salvar especialidade
-		List<IStrategy> sttSalvarEspecialidade = new ArrayList();
-		sttSalvarEspecialidade.add(new VerificarNomeNullo());
-		sttSalvarEspecialidade.add(new InserirDataCadastro());
-		sttSalvarEspecialidade.add(new InserirCodigo());
-		
-		// regras salvar especialidade
-		List<IStrategy> sttSalvarOrdemServico = new ArrayList();
-		sttSalvarOrdemServico.add(new InserirDataCadastro());
-		
-		// regras salvar ordem de servi�o
-		List<IStrategy> sttSalvarOS = new ArrayList();
-		sttSalvarOS.add(new InserirDataCadastro());
-		sttSalvarOS.add(new VerificarCamposVazioOS());
-		sttSalvarOS.add(new VerificarData());
-		sttSalvarOS.add(new InserirCodigo());
-		sttSalvarOS.add(new InserirStatus());
-		
-		//regras de resultado
-		List<IStrategy> sttResultado = new ArrayList();
-		sttResultado.add(new CamposResultado());
-		sttResultado.add(new ConsultarOrdemDeServico());
-		
-		// regras salvar tarefas com suas a�oes
-		List<IStrategy> sttSalvarTarefa = new ArrayList();
-		sttSalvarTarefa.add(new InserirDataCadastro());
-		sttSalvarTarefa.add(new InserirCodigo());
-		sttSalvarTarefa.add(new VerificarData());
-		sttSalvarTarefa.add(new AtualizarStatusOs());
-		
-		regrasNegociosSalvar.put(Mantenedor.class.getName(), sttSalvarMantenedor);
-		regrasNegociosSalvar.put(Especialidade.class.getName(), sttSalvarEspecialidade);
-		regrasNegociosSalvar.put(OrdemDeServico.class.getName(), sttSalvarOS);
-		regrasNegociosSalvar.put(Resultado.class.getName(), sttResultado);
-		regrasNegociosSalvar.put(Tarefa.class.getName(), sttSalvarTarefa);
-		
-		//REGRAS PARA DELETAR
-		List<IStrategy> sttDeletarOS = new ArrayList();
-		sttDeletarOS.add(new VerificarStatusNoDeletar());
-		
-		regrasNegociosExcluir.put(OrdemDeServico.class.getName(), sttDeletarOS);
-		
-		// carregar os DAOs
-		daos.put(Mantenedor.class.getName(), new DaoMantenedor());
-		daos.put(Especialidade.class.getName(), new DaoEspecialidade());
-		daos.put(OrdemDeServico.class.getName(), new DaoOrdemDeServico());
-		daos.put(Tarefa.class.getName(), new DaoTarefa());
+		this.mapaEstrategias.put(Especialidade.class.getName(),new MapaEspecialidade());
+		this.mapaDao.put(Especialidade.class.getName(),new DaoEspecialidade());
+		this.transportador.setSemafaro(ESemafaro.VERDE);
 	}
 
 	@Override
-	public AbstractMensagem salvar(Entidade entidade) {
+	public ITransportador salvar(Entidade entidade) {
 		
 		String nomeEntidade = entidade.getClass().getName();
-		List<IStrategy> regrasEntidade = this.regrasNegociosSalvar.get(nomeEntidade);
+		this.estrategias = this.mapaEstrategias.get(nomeEntidade).estrategiasSalvar();
+		Idao dao = this.mapaDao.get(nomeEntidade);
 		
-		this.mensagem = new controleMensagem();
+		this.transportador.setEntidade(entidade);
+		this.transportador.mapaObjetos().put("dao", dao);
 		
-		String mensagem = null;
-			for(IStrategy st: regrasEntidade){
-			mensagem = st.processar(entidade);
-			this.mensagem.setMensagens(mensagem);
-		}
+		this.executarEstrategias(this.transportador);
+		return this.transportador;
 		
-		if(this.mensagem.getStatus() == EStatus.VERMELHO)	//tem mensagem?
-			return this.mensagem;
-		else{
-			Idao dao = daos.get(nomeEntidade);
-			if(dao != null){
-				if(!dao.salvar(entidade)){
-					return this.mensagem;
-				}
-			}else{
-				//System.out.println("Erro na fachada no dao.salvar()");
-			}
-		}
-		
-		return this.mensagem;
 	}
 
 	@Override
 	public AbstractMensagem alterar(Entidade entidade) {
 		
-		Idao dao = daos.get(entidade.getClass().getName());
-		this.mensagem = new controleMensagem();
+//		this.estrategias = entidade.getClass().getName();
+//		List<IStrategy> regrasEntidade = this.mapaEstrategias.get(nomeEntidade).estrategiasAlterar();
+//		Idao dao = this.mapaDao.get(nomeEntidade);
+//		this.transportador.mapaObjetos().put("regras", dao);
+//		
+//		this.executarEstrategias(this.transportador);
+		return this.transportador;
 		
-		if(!dao.alterar(entidade)){
-			System.out.println("ERRO Alterar");
-			this.mensagem.setMensagens("Erro na altera��o");
-			return this.mensagem;
-		}
-		
-		return this.mensagem;
 	}
 
 	@Override
 	public AbstractMensagem excluir(Entidade entidade) {
 
-		StringBuilder sb = new StringBuilder();
 		String nomeEntidade = entidade.getClass().getName();
-		List<IStrategy> regrasEntidade = this.regrasNegociosExcluir.get(nomeEntidade);
+		this.estrategias = this.mapaEstrategias.get(nomeEntidade).estrategiasExcluir();
+		Idao dao = this.mapaDao.get(nomeEntidade);
 		
-		this.mensagem = new controleMensagem();
+		this.transportador.setEntidade(entidade);
+		this.transportador.mapaObjetos().put("regras", dao);
 		
-		String mensagem = null;
+		this.executarEstrategias(this.transportador);
+		return this.transportador;
 		
-		// verificar se h� regras para esta entidade
-		if(regrasEntidade != null){
-			for(IStrategy st: regrasEntidade){
-				mensagem = st.processar(entidade);
-				this.mensagem.setMensagens(mensagem);
-			}
-		}
-		
-		if(sb.length() > 0)	//tem mensagem?
-			return this.mensagem;
-		else{
-			Idao dao = daos.get(nomeEntidade);
-			if(dao != null){
-				if(!dao.excluir(entidade)){
-					this.mensagem.setMensagens("Erro na exclus�o");
-					return this.mensagem;
-				}
-			}else{
-				System.out.println("Erro na exclus�o no fachada");
-			}
-		}
-		
-		return this.mensagem;
 	}
 
 	@Override
 	public AbstractMensagem listar(Entidade entidade) {
 
-		this.mensagem = new controleMensagem();
+		String nomeEntidade = entidade.getClass().getName();
+		this.estrategias = this.mapaEstrategias.get(nomeEntidade).estrategiasListar();
+		Idao dao = this.mapaDao.get(nomeEntidade);
 		
-		Idao dao = daos.get(entidade.getClass().getName());
+		this.transportador.setEntidade(entidade);
+		this.transportador.mapaObjetos().put("dao", dao);
 		
-		this.mensagem.setEntidades(dao.listar(entidade));
+		this.executarEstrategias(this.transportador);
+		return this.transportador;
 		
-		return this.mensagem;
 	}
-
+	
+	private void executarEstrategias(ITransportador transportador) {
+		
+		for(IStrategy st: this.estrategias){
+			
+			st.processar(transportador);
+			
+			if(transportador.getSemafaro().getValor() >= ESemafaro.VERMELHO.getValor()) {
+				return;
+			}
+		}
+	}
 }

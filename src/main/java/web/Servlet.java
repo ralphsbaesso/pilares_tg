@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controle.AbstractMensagem;
 import controle.Fachada;
 import controle.IFachada;
+import controle.ITransportador;
 import dominio.Entidade;
 import web.command.CommandAlterar;
 import web.command.CommandExcluir;
@@ -32,7 +32,7 @@ public class Servlet extends HttpServlet {
 	// atributos
 	private Map<String, ICommand> commands;
 	private Map<String, IViewHelper> vhs;
-	private AbstractMensagem mensagem;
+	private ITransportador mensagem;
 	
 	// construtor
 	public Servlet(){
@@ -49,7 +49,6 @@ public class Servlet extends HttpServlet {
 		vhs.put("/Pilares/Planejamento", new VhPlanejamentos());
 		vhs.put("/Pilares/Apontamento", new VhApontamentos());
 		vhs.put("/Pilares/Analise", new VhAnalise());
-		System.out.println("aqui ralph 3333");
 	}
 	
 
@@ -60,7 +59,6 @@ public class Servlet extends HttpServlet {
 		
 		// Obt?m a uri que invocou esta servlet (O que foi definido no methdo do form html)
 		String uri = request.getRequestURI();
-		System.out.println(uri  + " quase certo");
 		
 		// Obt?m um viewhelper indexado pela uri que invocou esta servlet
 		IViewHelper vh = vhs.get(uri);
@@ -79,7 +77,6 @@ public class Servlet extends HttpServlet {
 		}else{
 			//System.out.println("apenas controle visual");
 		}
-		
 		
 		vh.setView(this.mensagem, request, response);
 		

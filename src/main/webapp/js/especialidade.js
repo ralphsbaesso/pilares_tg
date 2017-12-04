@@ -209,13 +209,15 @@ $(document).ready(function(){
 	    	 
 	    	 var objeto = JSON.parse(msg);
 	    	 
+	    	 var especialidades = objeto.entidades;
+	    	 var mensagens = objeto.mensagens;
+	    	 var especialidade;
+	    	 
+	    	 
 	    	 // verificar respostas
-	    	 if(objeto.status == 'VERDE'){
+	    	 if(objeto.semafaro == 'VERDE'){
 	    		
-	    		 var especialidades = objeto.entidades;
-		    	 var especialidade;
 		    	 var tBody = "";
-		    	 var o = new Array;
 		    	 
 		    	 
 		    	 for(var i = 0; i < especialidades.length; i++){
@@ -224,7 +226,7 @@ $(document).ready(function(){
 		    		 
 		    		 tBody += makeTableTBody(
 	 	 					makeTableTR(
-	    			 				makeTableTD("id") +
+	    			 				makeTableTD(especialidade.id) +
 	    			 				makeTableTD(especialidade.codigo) +
 	    			 				makeTableTD(especialidade.descricao) +
 	    			 				makeTableTD(especialidade.detalhamento) +
@@ -250,15 +252,19 @@ $(document).ready(function(){
 		    	 
 		    	 $('#divBody').html('');
 		    	 $('#divBody').append(table)
-	    	 }else if(objeto.status == "advertencia"){
+	    	 }else if(objeto.semafaro == 'VERMELHO'){
 	    		 
-	    		//alert(obj.advertencia);
-	    		 $("#modalAdvertencia .modal-body").append(objeto.mensagem);
-	    		 $('#modalAdvertencia').modal('show');
-	    		 $('#modalAdvertencia').on('hide.bs.modal', function(){
-	    			 $('#modalAdvertencia .modal-body').html("");
-	    			 //alert('fechou');
-	    		 });
+	    		 if(mensagens != null && mensagens.length > 0){
+	    			 
+	    			 for(var i = 0; i < mensagens.length; i++){
+	    				 mensagem += mensagens[i];
+	    				 mensagem += "</br>";
+	    			 }
+	    		 }else{
+	    			 mensagem = "Erro!"
+	    		 }
+	    		 
+	    		 modalAdvertencia(mensagem);
 	    	 }
 	     })
 	     .fail(function(jqXHR, textStatus, msg){
@@ -288,21 +294,22 @@ $(document).ready(function(){
 			var objeto = JSON.parse(msg);
 	    	 
 	    	 // verificar respostas
-	    	 if(objeto.status == 'VERDE'){
+	    	 if(objeto.semafaro == 'VERDE'){
 	    		 
 	    		 $('#divBody').html("");
 	    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + objeto.entidade.descricao + " salvo com sucesso!"));
 	    		 
-	    	 }else if(objeto.status == 'VERMELHO'){
+	    	 }else if(objeto.semafaro == 'VERMELHO'){
 	    		 
-	    		 var mensagem = "";
-	    		 
-	    		 for(var i = 0; i < objeto.mensagens.length; i++){
-	    			 mensagem += objeto.mensagens[i];
-	    			 mensagem += "</br>";
+	    		 if(mensagens != null && mensagens.length > 0){
+	    			 
+	    			 for(var i = 0; i < mensagens.length; i++){
+	    				 mensagem += mensagens[i];
+	    				 mensagem += "</br>";
+	    			 }
+	    		 }else{
+	    			 mensagem = "Erro!"
 	    		 }
-	    		 
-	    		 //alert(objeto.mensagens);
 	    		 
 	    		 modalAdvertencia(mensagem);
 	    	 }

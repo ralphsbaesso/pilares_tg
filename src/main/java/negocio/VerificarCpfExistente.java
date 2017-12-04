@@ -2,14 +2,13 @@ package negocio;
 
 import java.util.List;
 
+import controle.ITransportador;
 import dao.Idao;
 import dao.implementacao.DaoMantenedor;
 import dominio.Entidade;
-import dominio.Mantenedor;
 
 public class VerificarCpfExistente implements IStrategy {
 
-	@Override
 	public String processar(Entidade entidade) {
 		
 		Idao dao = new DaoMantenedor();
@@ -20,6 +19,12 @@ public class VerificarCpfExistente implements IStrategy {
 			return "CPF j? cadastrado! ";
 		}
 		return null;
+	}
+
+	@Override
+	public void processar(ITransportador transportador) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

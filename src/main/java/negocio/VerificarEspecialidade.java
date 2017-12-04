@@ -1,11 +1,12 @@
 package negocio;
 
+import controle.ITransportador;
 import dominio.Entidade;
 import dominio.Mantenedor;
+import enuns.ESemafaro;
 
 public class VerificarEspecialidade implements IStrategy {
 
-	@Override
 	public String processar(Entidade entidade) {
 		
 		// verificar se eh uma instancia de Mantenedor
@@ -17,6 +18,13 @@ public class VerificarEspecialidade implements IStrategy {
 			}
 		}
 		return null;
+	}
+
+
+	@Override
+	public void processar(ITransportador transportador) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

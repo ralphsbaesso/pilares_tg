@@ -8,25 +8,25 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controle.AbstractMensagem;
+import controle.ITransportador;
 
 //import org.json.JSONArray;
 
 import dominio.Entidade;
 import dominio.Especialidade;
-import enuns.EStatus;
+import enuns.ESemafaro;
 import web.WebMensagem;
 
 public class VhEspecialidade extends AbstractVH {
-	
+
 	private Especialidade especialidade;
 
 	@Override
 	public Entidade getEntidade(HttpServletRequest request) {
-		
+
 		especialidade = new Especialidade();
-		
-		if(this.especialidade == null)
+
+		if (this.especialidade == null)
 			especialidade = new Especialidade();
 
 		operacao = request.getParameter("operacao").toLowerCase();
@@ -46,7 +46,7 @@ public class VhEspecialidade extends AbstractVH {
 	}
 
 	@Override
-	public void setView(AbstractMensagem mensagem, HttpServletRequest request, HttpServletResponse response)
+	public void setView(ITransportador mensagem, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
 		PrintWriter out = response.getWriter();
@@ -55,35 +55,19 @@ public class VhEspecialidade extends AbstractVH {
 		Especialidade esp = (Especialidade) this.entidade;
 
 		if (operacao.equals("salvar")) {
-			
-			if(mensagem.getStatus() == EStatus.VERDE){
-				mensagem.setEntidade(this.especialidade);
-				respWeb.recebeObjetoMensagem(mensagem);
-				out.print(respWeb.enviarObjetoWeb());
-			}else{
-				respWeb.recebeObjetoMensagem(mensagem);
-				out.print(respWeb.enviarObjetoWeb());
-			}
+
+			out.print(respWeb.enviarObjetoWeb());
 			return;
-			
+
 		} else if (operacao.equals("excluir")) {
 			request.setAttribute("mensagem", esp.getDescricao() + " exclu?do com sucesso!!!");
 		} else if (operacao.equals("alterar")) {
 			request.setAttribute("mensagem", "Especialidade alterado com sucesso!");
 		} else if (operacao.equals("listar")) {
-			
-			if(mensagem.getStatus() == EStatus.VERDE){
-				mensagem.setEntidades((List<Entidade>)mensagem.getEntidades());
-				respWeb.recebeObjetoMensagem(mensagem);
-				respWeb.setStatus(mensagem.getStatus());
-				out.print(respWeb.enviarObjetoWeb());
-			}else{
-				respWeb.recebeObjetoMensagem(mensagem);
-				out.print(respWeb.enviarObjetoWeb());
-			}
-			
+
+			respWeb.recebeObjetoMensagem(mensagem);
+			out.print(respWeb.enviarObjetoWeb());
 			return;
-			
 		}
 
 		out.println("operacao: " + operacao);

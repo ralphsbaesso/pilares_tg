@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import controle.AbstractMensagem;
+import controle.ITransportador;
 import dominio.Apontamento;
 import dominio.Atividade;
 import dominio.Entidade;
@@ -54,7 +55,6 @@ public class VhAnalise extends AbstractVH{
 		
 	}
 
-	@Override
 	public void setView(AbstractMensagem mensagem, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -63,7 +63,7 @@ public class VhAnalise extends AbstractVH{
 			
 			Resultado r = (Resultado)this.entidade;
 			
-			// há mensagem em rusultado?
+			// hï¿½ mensagem em rusultado?
 			if(mensagem != null){
 				request.setAttribute("mensagem", mensagem);
 			}else{
@@ -83,7 +83,7 @@ public class VhAnalise extends AbstractVH{
 						}else if(mes.equals("02")){
 							mes = "Fevereiro";
 						}else if(mes.equals("03")){
-							mes = "Março";
+							mes = "Marï¿½o";
 						}else if(mes.equals("04")){
 							mes = "Abril";
 						}else if(mes.equals("05")){
@@ -119,6 +119,13 @@ public class VhAnalise extends AbstractVH{
 			}
 			
 			rd.forward(request, response);
+	}
+
+	@Override
+	public void setView(ITransportador mensagem, HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		// TODO Auto-generated method stub
+		
 	}	
 	
 	

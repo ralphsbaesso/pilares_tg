@@ -4,14 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import controle.ITransportador;
 import dao.Idao;
 import dao.implementacao.DaoMantenedor;
 import dao.implementacao.DaoOrdemDeServico;
 import dominio.*;
+import enuns.ESemafaro;
 
 public class VerificarStatusNoDeletar implements IStrategy {
 
-	@Override
 	public String processar(Entidade entidade) {
 		
 		if(entidade instanceof OrdemDeServico){
@@ -35,5 +36,11 @@ public class VerificarStatusNoDeletar implements IStrategy {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void processar(ITransportador transportador) {
+		// TODO Auto-generated method stub
+		
 	}
 }

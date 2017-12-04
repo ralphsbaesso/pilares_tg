@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import controle.AbstractMensagem;
+import controle.ITransportador;
 import dominio.Atividade;
 import dominio.Entidade;
 import dominio.OrdemDeServico;
@@ -69,9 +70,9 @@ public class VhOrdemDeServico extends AbstractVH{
 				for(int i = 1; true; i++){
 					atividade = new Atividade();
 					
-					// verificar se há parametro
+					// verificar se hï¿½ parametro
 					if(request.getParameter("txtDescricaoAtividade" + i) == null){
-						break; // não tem mais parametros, sair do loop
+						break; // nï¿½o tem mais parametros, sair do loop
 					}
 					
 					String descricao = request.getParameter("txtDescricaoAtividade" + i);
@@ -128,7 +129,6 @@ public class VhOrdemDeServico extends AbstractVH{
 		
 	}
 
-	@Override
 	public void setView(AbstractMensagem resultado, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -145,10 +145,10 @@ public class VhOrdemDeServico extends AbstractVH{
 								
 				if(operacao.equals("listar")){
 					
-					// verificar se lista está vazia
+					// verificar se lista estï¿½ vazia
 					if(lista.size() == 0){
 						// vazio
-						request.setAttribute("mensagem", "Ordem não encontrada!");
+						request.setAttribute("mensagem", "Ordem nï¿½o encontrada!");
 					}else{
 						// com algum objeto
 						request.setAttribute("ordens", lista);
@@ -156,22 +156,29 @@ public class VhOrdemDeServico extends AbstractVH{
 					
 				}
 			}else if(resultado != null){			
-				//falha na validação de regras de negocio
+				//falha na validaï¿½ï¿½o de regras de negocio
 				// exibe as mesagens
 				request.setAttribute("mensagem", resultado.toString());
 				
 			}else{
 				// resultado igual a nulo
-				// operação com sucesso ou controle da <div>
+				// operaï¿½ï¿½o com sucesso ou controle da <div>
 				if(operacao.equals("salvar")){		
-					request.setAttribute("mensagem", om.getTitulo() + " salvo com sucesso! - Código: " + om.getCodigo());			
+					request.setAttribute("mensagem", om.getTitulo() + " salvo com sucesso! - Cï¿½digo: " + om.getCodigo());			
 				}else if(operacao.equals("excluir")){		
-					request.setAttribute("mensagem", om.getTitulo() + " excluído com sucesso!!!");
+					request.setAttribute("mensagem", om.getTitulo() + " excluï¿½do com sucesso!!!");
 				}else if(operacao.equals("alterar")){
 					request.setAttribute("mensagem","Ordem de Servico alterado com sucesso!");
 				}
 			}
 			
 			rd.forward(request, response);
+	}
+
+	@Override
+	public void setView(ITransportador mensagem, HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		// TODO Auto-generated method stub
+		
 	}	
 }

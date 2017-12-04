@@ -1,12 +1,13 @@
 package negocio;
 
+import controle.ITransportador;
 import dominio.Entidade;
 import dominio.Mantenedor;
 import dominio.OrdemDeServico;
+import enuns.ESemafaro;
 
 public class VerificarCamposVazioOS implements IStrategy {
 
-	@Override
 	public String processar(Entidade entidade) {
 		
 		StringBuilder sb = new StringBuilder();
@@ -44,6 +45,12 @@ public class VerificarCamposVazioOS implements IStrategy {
 		}else{
 			return null;
 		}
+	}
+
+	@Override
+	public void processar(ITransportador transportador) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
