@@ -47,7 +47,7 @@ function makeTableTFoot(parametro, qtdade){
 }
 
 function makeTableTR(parametro){
-	return "<tr>" + parametro + "</tr>";
+	return "<tr id='tr'>" + parametro + "</tr>";
 }
 
 function makeTableTD(parametro){
@@ -71,5 +71,6 @@ function htmlButtonDelete(id){
 	if(typeof id === undefined)
 		id = '';
 
-	return "<button id='" + id + "' class='btn btn-outline-danger form-control' name='operacao' id='buttonExcluir'>Excluir</button>";
+	return "<button id='" + id + "' class='btn btn-outline-danger form-control buttonExcluir' name='operacao'>Excluir</button>";
 }
+

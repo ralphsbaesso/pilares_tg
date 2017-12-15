@@ -6,9 +6,9 @@ import java.util.List;
 import dominio.Entidade;
 import enuns.ESemafaro;
 
-public abstract class AbstractMensagem implements ITransportador{
+public abstract class ATransportador implements ITransportador{
 	
-	protected Object entidade = new Entidade();
+	protected Entidade entidade = new Entidade();
 	protected List<String> mensagens = new ArrayList();
 	protected List<Entidade> entidades = new ArrayList();
 	protected ESemafaro semafaro = ESemafaro.VERDE;
@@ -32,11 +32,11 @@ public abstract class AbstractMensagem implements ITransportador{
 		return entidades;
 	}
 	
-	public Object getEntidade() {
+	public Entidade getEntidade() {
 		return entidade;
 	}
 	
-	public void setEntidade(Object entidade) {
+	public void setEntidade(Entidade entidade) {
 		this.entidade = entidade;
 	}
 
@@ -44,9 +44,9 @@ public abstract class AbstractMensagem implements ITransportador{
 		this.entidades = entidades;
 	}
 
-	public void setEntidades(Object entidade) {
+	public void setEntidades(Entidade entidade) {
 
-		this.entidades.add((Entidade) entidade);
+		this.entidades.add(entidade);
 	}
 
 	public ESemafaro getSemafaro() {
@@ -58,13 +58,8 @@ public abstract class AbstractMensagem implements ITransportador{
 	}
 	
 	public void recebeObjetoMensagem(ITransportador obj){
-		try {
-			this.entidade = Class.forName(obj.getEntidade().getClass().getName()).cast(obj.getEntidade());
-			this.entidades = obj.getEntidades();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.entidade = obj.getEntidade();
+		this.entidades = obj.getEntidades();
 		this.mensagens = obj.getMensagens();
 		this.semafaro = obj.getSemafaro();
 	}

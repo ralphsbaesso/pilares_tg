@@ -2,20 +2,19 @@ package web.viewhelper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controle.ITransportador;
+import com.google.gson.Gson;
 
-//import org.json.JSONArray;
+import controle.ITransportador;
 
 import dominio.Entidade;
 import dominio.Especialidade;
-import enuns.ESemafaro;
-import web.WebMensagem;
+import enuns.EOperacao;
+import web.TransportadorWeb;
 
 public class VhEspecialidade extends AbstractVH {
 
@@ -24,49 +23,57 @@ public class VhEspecialidade extends AbstractVH {
 	@Override
 	public Entidade getEntidade(HttpServletRequest request) {
 
+		Gson gson = new Gson();
 		especialidade = new Especialidade();
-
-		if (this.especialidade == null)
-			especialidade = new Especialidade();
+		String jsonEspecialidade = request.getParameter("especialidade");
+		
+		if(jsonEspecialidade != null) {
+			this.especialidade = gson.fromJson(jsonEspecialidade, Especialidade.class);			
+		}
 
 		operacao = request.getParameter("operacao").toLowerCase();
 
-		if (operacao.equals("salvar") || operacao.equals("alterar")) {
-			String descricao = request.getParameter("txtDescricao");
-			String detalhamento = request.getParameter("txtDetalhamento");
-
-			especialidade.setDescricao(descricao);
-			especialidade.setDetalhamento(detalhamento);
+		if (operacao.equals(EOperacao.SALVAR.getValor())) {
+			
+		}else if( operacao.equals(EOperacao.ALTERAR.getValor())) {
+			
+		}else if(operacao.equals(EOperacao.EXCLUIR.getValor())) {
+		
+			
 		}
-		// armazer a entidade
-		this.entidade = especialidade;
 
 		return especialidade;
 
 	}
 
 	@Override
-	public void setView(ITransportador mensagem, HttpServletRequest request, HttpServletResponse response)
+	public void setView(ITransportador transportador, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
 		PrintWriter out = response.getWriter();
-		WebMensagem respWeb = new WebMensagem();
+		TransportadorWeb transpotadorWeb = new TransportadorWeb();
 
 		Especialidade esp = (Especialidade) this.entidade;
+		transpotadorWeb.recebeObjetoMensagem(transportador);
 
 		if (operacao.equals("salvar")) {
 
-			out.print(respWeb.enviarObjetoWeb());
+			out.print(transpotadorWeb.enviarObjetoWeb());
 			return;
 
 		} else if (operacao.equals("excluir")) {
-			request.setAttribute("mensagem", esp.getDescricao() + " exclu?do com sucesso!!!");
+
+			out.print(transpotadorWeb.enviarObjetoWeb());
+			return;
+			
 		} else if (operacao.equals("alterar")) {
-			request.setAttribute("mensagem", "Especialidade alterado com sucesso!");
+
+			out.print(transpotadorWeb.enviarObjetoWeb());
+			return;
+			
 		} else if (operacao.equals("listar")) {
 
-			respWeb.recebeObjetoMensagem(mensagem);
-			out.print(respWeb.enviarObjetoWeb());
+			out.print(transpotadorWeb.enviarObjetoWeb());
 			return;
 		}
 

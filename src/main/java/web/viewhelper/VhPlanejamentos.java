@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controle.AbstractMensagem;
+import controle.ATransportador;
 import controle.ITransportador;
 import dominio.Entidade;
 import dominio.Planejamento;
@@ -135,7 +135,7 @@ public class VhPlanejamentos extends AbstractVH{
 		return tarefa;
 	}
 
-	public void setView(AbstractMensagem resultado, HttpServletRequest request, HttpServletResponse response)
+	public void setView(ATransportador resultado, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 			Tarefa tarefa = (Tarefa)this.entidade;

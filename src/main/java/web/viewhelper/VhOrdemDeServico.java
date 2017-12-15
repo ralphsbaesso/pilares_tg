@@ -11,7 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controle.AbstractMensagem;
+import controle.ATransportador;
 import controle.ITransportador;
 import dominio.Atividade;
 import dominio.Entidade;
@@ -129,7 +129,7 @@ public class VhOrdemDeServico extends AbstractVH{
 		
 	}
 
-	public void setView(AbstractMensagem resultado, HttpServletRequest request, HttpServletResponse response)
+	public void setView(ATransportador resultado, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 			OrdemDeServico om = (OrdemDeServico)this.entidade;

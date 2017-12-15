@@ -1,15 +1,11 @@
 /**
- * ESPECIALIDADE
+ * 
+ * @returns
  */
-
-// objeto especialidade
-var Especialidade = function(descricao, detalhamento) {
-		this.descricao = descricao;
-		this.detalhamento = detalhamento;
-}
-
 $(document).ready(function(){
-	//alert('ok');
+	
+	
+	especialdiade = new Object();
 	
 	
 	// OPERAÇÃO
@@ -27,7 +23,9 @@ $(document).ready(function(){
 		}
 	});
 	
-	// linkCadastrar - exibe o formulário de cadastro
+	/**
+	 * linkCadastrar - exibe o formulário de cadastro
+	 */
 	$('#linkCadastrar').on('click', function(){
 	
 		$("#divBody").html(montarCadastro());
@@ -35,7 +33,9 @@ $(document).ready(function(){
 		
 	});//linkCadastrar
 	
-	// linkPesquisar - exibe formulário para pesquisa
+	/**
+	 * linkPesquisar - exibe formulário para pesquisa
+	 */
 	$('#linkPesquisar').click(function(){
 		
 		
@@ -55,144 +55,67 @@ $(document).ready(function(){
 	// buttonAlterar
 	$('body').on('click', '.buttonAlterar', function(){
 		
+		//var id = $(this).attr('id');
+		var linhaTR = $(this).parent().parent().parent();
+		var id = linhaTR.find("td").eq(0).html();
+		var codigo = linhaTR.find("td").eq(1).html();
+		var descricao = linhaTR.find("td").eq(2).html();
+		var detalhamento = linhaTR.find("td").eq(3).html();
+		var dataCadastro = linhaTR.find("td").eq(4).html();
 		
-		var id = $(this);
-		alert(id.attr('id'));
+		this.especialidade = new Object();
+		
+		windows.especialidade.id = id;
+		windows.especialidade.codigo = codigo;
+		windows.especialidade.descricao = descricao;
+		windows.especialidade.detalhamento = detalhamento;
+		windows.especialidade.dataCadastro = dataCadastro;
+		
+		$('#divBody').html(montarAlterarExcluir());
+		
+//		alert(id);
+//		alert(codigo);
+//		alert(descricao);
+//		alert(detalhamento);
+//		alert(dataCadastro);
+	});
+	
+	// buttonExcluir
+	$('body').on('click', '.buttonExcluir', function(){
+		
+		var id = $(this).attr('id');
+		
+		excluir(id);
 	});
 	
 	
+//	//botão adicionarEspecialidade
+//	$('body').on('click','#addEspecialidade', function(){
+//		//alert('ok');
+//		var clone = $('#selectEspecialidade').clone();
+//		clone.children('button').remove();
+//		clone.removeAttr("id");
+//		clone.append("&nbsp;<button type='button' class='form-control btn-default deleteEspecialidade'>Remover Especialidade</button>");
+//		clone.hide();
+//		$('#selectEspecialidade').after(clone);
+//		clone.slideDown();
+//		
+//	});// botão adicionarEspecialidade
 	
-	// btnAlterar - alterar cadastro do mantenedor
-	$('body').on('click', '#btnAlterar', function(){
-
-		var select = $('[name = cbEspecialidadeIds]');
-		var especialidades = new Array();
-		
-		for(var i = 0; i < select.length; i++){
-			especialidades[i] = select[i].value;
-		}
-		
-		$.ajax({
-		          url : "Especialidade",
-		          type : 'post',
-		          dataType : 'html',
-		          data : {
-		               operacao : "alterar",
-		               txtId : $('[name = txtId]').val(),
-		               txtNome : $("[name = txtNome]").val(),
-		               txtCpf : $("[name = txtCpf]").val(),
-		               cbSexo : $("[name = cbSexo]").val(),
-		               txtEmail : $("[name = txtEmail]").val(),
-		               cbEspecialidadeIds : especialidades
-		               
-		               
-		          },
-		          beforeSend : function(){
-		               //$("#sucesso").html("<p align='center'>Carregando...</p>");
-		          }
-		     })
-		     .done(function(msg){
-		    	 //alert(msg);
-		    	 var obj = JSON.parse(msg);
-		    	 //alert(obj);
-		    	 
-		    	 // verificar respostas
-		    	 if(obj.sucesso != null){
-		    		 $("#sucesso").html(obj.sucesso);
-		    		 $("#advertencia").html(""); // limpar
-		    	 }
-		    	 if(obj.advertencia != null){
-		    		//alert(obj.advertencia);
-		    		 $("#modalAdvertencia .modal-body").append(obj.advertencia);
-		    		 $('#modalAdvertencia').modal('show');
-		    		 $('#modalAdvertencia').on('hide.bs.modal', function(){
-		    			 $('#modalAdvertencia .modal-body').html("");
-		    			 //alert('fechou');
-		    		 });
-		    	 }
-		     })
-		     .fail(function(jqXHR, textStatus, msg){
-		          alert(msg);
-		     }); 
-	});//btnAlterar
-	
-	
-	
-	
-	// btnExcluir - excluir mantenedor
-	$('body').on('click', '#btnExcluir', function(){
-		
-		
-		$.ajax({
-		          url : "Especialidade",
-		          type : 'post',
-		          dataType : 'html',
-		          data : {
-		               operacao : "excluir",
-		               txtId : $("[name = txtId]").val()
-		               
-		          },
-		          beforeSend : function(){
-		               //$("#sucesso").html("<p align='center'>Carregando...</p>");
-		          }
-		     })
-		     .done(function(msg){
-		    	 //alert(msg);
-		    	 var obj = JSON.parse(msg);
-		    	 //alert(obj);
-		    	 
-		    	 // verificar respostas
-		    	 if(obj.sucesso != null){
-		    		 $("#sucesso").html(obj.sucesso);
-		    		 $("#advertencia").html(""); // limpar
-		    	 }
-		    	 if(obj.advertencia != null){
-		    		//alert(obj.advertencia);
-		    		 $("#modalAdvertencia .modal-body").append(obj.advertencia);
-		    		 $('#modalAdvertencia').modal('show');
-		    		 $('#modalAdvertencia').on('hide.bs.modal', function(){
-		    			 $('#modalAdvertencia .modal-body').html("");
-		    			 //alert('fechou');
-		    		 });
-		    	 }
-		     })
-		     .fail(function(jqXHR, textStatus, msg){
-		          alert(msg);
-		     }); 
-	});//btnExcluir
-	
-	
-	
-	
-	
-	
-	//botão adicionarEspecialidade
-	$('body').on('click','#addEspecialidade', function(){
-		//alert('ok');
-		var clone = $('#selectEspecialidade').clone();
-		clone.children('button').remove();
-		clone.removeAttr("id");
-		clone.append("&nbsp;<button type='button' class='form-control btn-default deleteEspecialidade'>Remover Especialidade</button>");
-		clone.hide();
-		$('#selectEspecialidade').after(clone);
-		clone.slideDown();
-		
-	});// botão adicionarEspecialidade
-	
-	// botão deleteEspecialidade
-	$("body").on("click",".deleteEspecialidade", function(){
-		
-		 var indice = $(".deleteEspecialidade").index(this);
-		
-          $(".deleteEspecialidade").eq(indice).parent().slideUp('fast', function() {  
-               $(this).remove();  
-          })  
-         
-    }); // deleteEspecialidade
+//	// botão deleteEspecialidade
+//	$("body").on("click",".deleteEspecialidade", function(){
+//		
+//		 var indice = $(".deleteEspecialidade").index(this);
+//		
+//          $(".deleteEspecialidade").eq(indice).parent().slideUp('fast', function() {  
+//               $(this).remove();  
+//          })  
+//         
+//    }); // deleteEspecialidade
 
 /* FUNÇÕES CHAMADAS AJAX */
 	
-	function listar(entidade){
+	function listar(){
 		
 		$.ajax({
 	          url : "Especialidade",
@@ -207,15 +130,17 @@ $(document).ready(function(){
 	     })
 	     .done(function(msg){
 	    	 
-	    	 var objeto = JSON.parse(msg);
-	    	 
-	    	 var especialidades = objeto.entidades;
-	    	 var mensagens = objeto.mensagens;
-	    	 var especialidade;
+	    	var json = JSON.parse(msg);
+			var especialidade = json.entidade;
+			var especialidades = json.entidades;
+			var mensagens = json.mensagens;
+			var semafaro = json.semafaro;
+			
+			var mensagem = "";
 	    	 
 	    	 
 	    	 // verificar respostas
-	    	 if(objeto.semafaro == 'VERDE'){
+	    	 if(semafaro == 'VERDE'){
 	    		
 		    	 var tBody = "";
 		    	 
@@ -231,7 +156,7 @@ $(document).ready(function(){
 	    			 				makeTableTD(especialidade.descricao) +
 	    			 				makeTableTD(especialidade.detalhamento) +
 	    			 				makeTableTD(formatarData(especialidade.dataCadastro))+
-    			 					makeTableTDDoublo(htmlButtonUpdate(), htmlButtonDelete())
+    			 					makeTableTDDoublo(htmlButtonUpdate(especialidade.id), htmlButtonDelete(especialidade.id))
 	    	 					)		
 	    			 		);
 		    	 }
@@ -252,7 +177,7 @@ $(document).ready(function(){
 		    	 
 		    	 $('#divBody').html('');
 		    	 $('#divBody').append(table)
-	    	 }else if(objeto.semafaro == 'VERMELHO'){
+	    	 }else if(semafaro == 'VERMELHO'){
 	    		 
 	    		 if(mensagens != null && mensagens.length > 0){
 	    			 
@@ -274,14 +199,20 @@ $(document).ready(function(){
 
 	function salvar(){
 		
+		//var especialidade = new Object();
+		
+		especialidade.descricao = $("[name = txtDescricao]").val();
+		especialidade.detalhamento = $("[name = txtDetalhamento]").val();
+		
+		var json = JSON.stringify(especialidade);
+		
 		$.ajax({
 	          url : "Especialidade",
 	          type : 'post',
-	          dataType : 'html',
+	          dataType : 'json',
 	          data : {
 	               operacao : "salvar",
-	               txtDescricao : $("[name = txtDescricao]").val(),
-	               txtDetalhamento : $("[name = txtDetalhamento]").val()
+	               especialidade : json
 	               
 	          },
 	          
@@ -291,15 +222,21 @@ $(document).ready(function(){
 	     })
 	     .done(function(msg){
 	    	 
-			var objeto = JSON.parse(msg);
+			var json = JSON.parse(msg);
+			var especialidade = json.entidade;
+			var especialidades = json.entidades;
+			var mensagens = json.mensagens;
+			var semafaro = json.semafaro;
+			
+			var mensagem = "";
 	    	 
 	    	 // verificar respostas
-	    	 if(objeto.semafaro == 'VERDE'){
+	    	 if(semafaro == 'VERDE'){
 	    		 
 	    		 $('#divBody').html("");
-	    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + objeto.entidade.descricao + " salvo com sucesso!"));
+	    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " salvo com sucesso!"));
 	    		 
-	    	 }else if(objeto.semafaro == 'VERMELHO'){
+	    	 }else if(semafaro == 'VERMELHO'){
 	    		 
 	    		 if(mensagens != null && mensagens.length > 0){
 	    			 
@@ -318,6 +255,118 @@ $(document).ready(function(){
 	          alert(msg + " Erro grave!!!");
 	     });
 	}
+	
+	
+	function excluir(id){
+		
+		$.ajax({
+	          url : "Especialidade",
+	          type : 'post',
+	          dataType : 'html',
+	          data : {
+	              operacao : "excluir",
+	              txtId : id
+	          },
+	          
+	          beforeSend : function(){
+	               $("#sucesso").html("<p align='center'>Carregando...</p>");
+	          }
+	     })
+	     .done(function(msg){
+	    	 
+			var json = JSON.parse(msg);
+			var especialidade = json.entidade;
+			var especialidades = json.entidades;
+			var mensagens = json.mensagens;
+			var semafaro = json.semafaro;
+			
+			var mensagem = "";
+	    	 
+	    	 // verificar respostas
+	    	 if(semafaro == 'VERDE'){
+	    		 
+	    		 $('#divBody').html("");
+	    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " excluida com sucesso!"));
+	    		 
+	    	 }else if(semafaro == 'VERMELHO'){
+	    		 
+	    		 if(mensagens != null && mensagens.length > 0){
+	    			 
+	    			 for(var i = 0; i < mensagens.length; i++){
+	    				 mensagem += mensagens[i];
+	    				 mensagem += "</br>";
+	    			 }
+	    		 }else{
+	    			 mensagem = "Erro!"
+	    		 }
+	    		 
+	    		 modalAdvertencia(mensagem);
+	    	 }
+	     })
+	     .fail(function(jqXHR, textStatus, msg){
+	          alert(msg + " Erro grave!!!");
+	     });
+		
+	}
+	
+	function alterar(){
+		
+		//var especialidade = new Object();
+		
+		this.especialidade.descricao;
+		this.especialidade.detalhamento;
+		
+		var json = JSON.stringify(this.especialidade);
+		
+		$.ajax({
+	          url : "Especialidade",
+	          type : 'post',
+	          dataType : 'html',
+	          data : {
+	               operacao : "salvar",
+	               especialidade : json
+	          },
+	          
+	          beforeSend : function(){
+	               $("#sucesso").html("<p align='center'>Carregando...</p>");
+	          }
+	     })
+	     .done(function(msg){
+	    	 
+			var json = JSON.parse(msg);
+			var especialidade = json.entidade;
+			var especialidades = json.entidades;
+			var mensagens = json.mensagens;
+			var semafaro = json.semafaro;
+			
+			var mensagem = "";
+	    	 
+	    	 // verificar respostas
+	    	 if(semafaro == 'VERDE'){
+	    		 
+	    		 $('#divBody').html("");
+	    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " alterada com sucesso!"));
+	    		 
+	    	 }else if(semafaro == 'VERMELHO'){
+	    		 
+	    		 if(mensagens != null && mensagens.length > 0){
+	    			 
+	    			 for(var i = 0; i < mensagens.length; i++){
+	    				 mensagem += mensagens[i];
+	    				 mensagem += "</br>";
+	    			 }
+	    		 }else{
+	    			 mensagem = "Erro!"
+	    		 }
+	    		 
+	    		 modalAdvertencia(mensagem);
+	    	 }
+	     })
+	     .fail(function(jqXHR, textStatus, msg){
+	          alert(msg + " Erro grave!!!");
+	     });
+	}
+	
 	
 /* FUNÇÕES DE MONTAGEM DE COPONENTES HTML*/
 	
@@ -366,7 +415,7 @@ $(document).ready(function(){
 		"</div>" ;
 	}
 	
-	function montarAlterarExcluir(especialidade){
+	function montarAlterarExcluir(){
 		
 		return "<div class='py-5'>" +
 		"<div class='container'>" +
@@ -374,13 +423,17 @@ $(document).ready(function(){
 		"<div class='col-md-8'>" +
 		"<h1 class='display-4'>Alterar</h1>" +
 		"<ul class='list-group'>" +
+		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='txtDescricao' name='txtDescricao'>Código</label>" +
+		"<strong>" +
+		"<label class='form-control' id='txtDescricao' name='txtDescricao'>" + windows.especialidade.codigo + "</label>" +
+		"</strong>" +
 		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='txtDescricao' name='txtDescricao'>Descrição</label>" +
-		"<input class='form-control' type='text' placeholder='Digite aqui..'> </li>" +
+		"<input class='form-control' type='text' value='" + windows.especialidade.descricao + "'> </li>" +
 		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='txtDetalhamento' name='txtDetalhamento'>Detalhamento</label>" +
-		"<input class='form-control w-75' type='text' placeholder='Digite aqui..'> </li>" +
+		"<input class='form-control w-75' type='text' value='" + windows.especialidade.detalhamento + "'> </li>" +
 		"<li class='list-group-item form-inline'>" +
-		"<button class='btn btn-outline-warning form-control' name='operacao' style='width:49%'>Alterar</button>" +
-		"<button class='btn btn-outline-danger form-control' name='operacao' style='width:49%'>Excluir</button>" +
+		"<button class='btn btn-outline-warning form-control' name='operacao' id='operacao' value='alterar' style='width:49%'>Alterar</button>" +
+		"<button class='btn btn-outline-danger form-control' name='operacao' id='operacao' style='width:49%'>Excluir</button>" +
 		"</li>" +
 		"</ul>" +
 		"</div>" +
@@ -390,7 +443,7 @@ $(document).ready(function(){
 	}
 	
 	// montar lista
-	function montarLista(...aArgs){
+	function montarLista(){
 		
 		entidades = aArgs;
 		//alert(entidades[0].descricao);
@@ -455,6 +508,48 @@ $(document).ready(function(){
 		      "</div>" +
 		      "<div class='modal-body'>" +
 		        mensagem +
+		      "</div>" +
+		      "<div class='modal-footer'>" +
+		        "<button type='button' class='btn btn-default' data-dismiss='modal'>Fechar</button>" +
+		      "</div>" +
+		    "</div>" +
+		  "</div>" +
+		"</div> " );
+		
+		// abrir modal
+		 $('#modalAdvertencia').modal('show');
+		 $('.modal-backdrop').css({
+			   'background-color' : '#FFE4C4',
+			   'opacity' : 0.4
+		 });
+		 // fechando o modal
+		 $('#modalAdvertencia').on('hide.bs.modal', function(){
+			 $('#modalAdvertencia .modal-body').html("");
+			 $('#divAdvertencia').html('');
+			 // limpando as mensagens
+		 });
+	}
+	
+	//montar modal Alterar
+	function modalAlterarEspecialidade(){
+		
+		var especialidade = arguments;
+		
+		$("#divBody").prepend(
+		"<div class='modal fade' id='modalAdvertencia' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'>" +
+		  "<div class='modal-dialog' role='document'>" +
+		    "<div class='modal-content'>" +
+		      "<div class='modal-header'>" +
+		        "<button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>" +
+		        "<h4 class='modal-title' id='myModalLabel'>Atenção</h4>" +
+		      "</div>" +
+		      "<div class='modal-body'>" +
+			      "<ul class='list-group'>" +
+		            "<li class='list-group-item'>Código " + especialidade.codigo + "</li>" +
+		            "<li class='list-group-item'>Descrição " + especialidade.descricao + "</li>" +
+		            "<li class='list-group-item'>Detalhamento " + especialidade.detalhamento + "</li>" +
+		            "<li class='list-group-item'>Porta ac consectetur</li>" +
+		          "</ul>" +
 		      "</div>" +
 		      "<div class='modal-footer'>" +
 		        "<button type='button' class='btn btn-default' data-dismiss='modal'>Fechar</button>" +

@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controle.AbstractMensagem;
+import controle.ATransportador;
 import controle.ITransportador;
 import dominio.Apontamento;
 import dominio.Atividade;
@@ -55,7 +55,7 @@ public class VhAnalise extends AbstractVH{
 		
 	}
 
-	public void setView(AbstractMensagem mensagem, HttpServletRequest request, HttpServletResponse response)
+	public void setView(ATransportador mensagem, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 			RequestDispatcher rd = request.getRequestDispatcher("analise.jsp");

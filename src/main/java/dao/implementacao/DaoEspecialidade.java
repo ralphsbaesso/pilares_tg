@@ -62,13 +62,13 @@ public class DaoEspecialidade implements Idao {
         sql = "UPDATE ESPECIALIDADES"
         		+ " SET descricao = ?, "
         		+ " detalhamento = ? "
-        		+ " WHERE codigo = ?";
+        		+ " WHERE id = ?";
         
         try {
             preparedStatement = Conexao.conexao.prepareStatement(sql);
             preparedStatement.setString(1, especialidade.getDescricao());
             preparedStatement.setString(2, especialidade.getDetalhamento());
-            preparedStatement.setString(3, especialidade.getCodigo());
+            preparedStatement.setInt(3, especialidade.getId());
             preparedStatement.execute();
             preparedStatement.close();
         } catch (SQLException ex) {
@@ -90,12 +90,12 @@ public class DaoEspecialidade implements Idao {
 		Conexao.conectar();
         
         sql = "DELETE FROM ESPECIALIDADES "
-        		+ "WHERE  codigo = (?)";
+        		+ "WHERE  id = (?)";
         System.out.println(sql);
         
         try {
             preparedStatement = Conexao.conexao.prepareStatement(sql);
-            preparedStatement.setString(1, especialidade.getCodigo());
+            preparedStatement.setInt(1, especialidade.getId());
             preparedStatement.execute();
             preparedStatement.close();
         } catch (SQLException ex) {

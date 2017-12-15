@@ -18,7 +18,7 @@ public class Fachada implements IFachada {
 	//atributos
 	private Map<String, IMapaDeNegocio> mapaEstrategias = new HashMap();
 	private Map<String, Idao> mapaDao = new HashMap();
-	private TransportadorFachada transportador = new TransportadorFachada();
+	private TransportadorFachada transportador;
 	private List<IStrategy> estrategias;
 	
 	//construtor
@@ -27,16 +27,52 @@ public class Fachada implements IFachada {
 	 * Carrega todos os mapas de estratégias
 	 */
 	public Fachada(){
+		
+		// Carregar mapa de estratégias
 		this.mapaEstrategias.put(Especialidade.class.getName(),new MapaEspecialidade());
+		
+		// Carregar mapa de DAO
 		this.mapaDao.put(Especialidade.class.getName(),new DaoEspecialidade());
-		this.transportador.setSemafaro(ESemafaro.VERDE);
 	}
 
 	@Override
 	public ITransportador salvar(Entidade entidade) {
 		
 		String nomeEntidade = entidade.getClass().getName();
+		this.transportador = new TransportadorFachada();
+		Idao dao = this.mapaDao.get(nomeEntidade);
 		this.estrategias = this.mapaEstrategias.get(nomeEntidade).estrategiasSalvar();
+		
+		this.transportador.setEntidade(entidade);
+		this.transportador.mapaObjetos().put("dao", dao);
+		
+		this.executarEstrategias(this.transportador);
+		return this.transportador;
+		
+	}
+
+	@Override
+	public ATransportador alterar(Entidade entidade) {
+		
+		String nomeEntidade = entidade.getClass().getName();
+		this.transportador = new TransportadorFachada();
+		Idao dao = this.mapaDao.get(nomeEntidade);
+		this.estrategias = this.mapaEstrategias.get(nomeEntidade).estrategiasAlterar();
+		
+		this.transportador.setEntidade(entidade);
+		this.transportador.mapaObjetos().put("dao", dao);
+		
+		this.executarEstrategias(this.transportador);
+		return this.transportador;
+		
+	}
+
+	@Override
+	public ATransportador excluir(Entidade entidade) {
+
+		String nomeEntidade = entidade.getClass().getName();
+		this.transportador = new TransportadorFachada();
+		this.estrategias = this.mapaEstrategias.get(nomeEntidade).estrategiasExcluir();
 		Idao dao = this.mapaDao.get(nomeEntidade);
 		
 		this.transportador.setEntidade(entidade);
@@ -48,37 +84,10 @@ public class Fachada implements IFachada {
 	}
 
 	@Override
-	public AbstractMensagem alterar(Entidade entidade) {
-		
-//		this.estrategias = entidade.getClass().getName();
-//		List<IStrategy> regrasEntidade = this.mapaEstrategias.get(nomeEntidade).estrategiasAlterar();
-//		Idao dao = this.mapaDao.get(nomeEntidade);
-//		this.transportador.mapaObjetos().put("regras", dao);
-//		
-//		this.executarEstrategias(this.transportador);
-		return this.transportador;
-		
-	}
-
-	@Override
-	public AbstractMensagem excluir(Entidade entidade) {
+	public ATransportador listar(Entidade entidade) {
 
 		String nomeEntidade = entidade.getClass().getName();
-		this.estrategias = this.mapaEstrategias.get(nomeEntidade).estrategiasExcluir();
-		Idao dao = this.mapaDao.get(nomeEntidade);
-		
-		this.transportador.setEntidade(entidade);
-		this.transportador.mapaObjetos().put("regras", dao);
-		
-		this.executarEstrategias(this.transportador);
-		return this.transportador;
-		
-	}
-
-	@Override
-	public AbstractMensagem listar(Entidade entidade) {
-
-		String nomeEntidade = entidade.getClass().getName();
+		this.transportador = new TransportadorFachada();
 		this.estrategias = this.mapaEstrategias.get(nomeEntidade).estrategiasListar();
 		Idao dao = this.mapaDao.get(nomeEntidade);
 		
