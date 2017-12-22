@@ -103,9 +103,7 @@ public class Fachada implements IFachada {
 		
 		for(IStrategy st: this.estrategias){
 			
-			st.processar(transportador);
-			
-			if(transportador.getSemafaro().getValor() >= ESemafaro.VERMELHO.getValor()) {
+			if(!st.processar(transportador)) {
 				return;
 			}
 		}

@@ -3,6 +3,6 @@ package negocio;
 import controle.ITransportador;
 
 	public interface IStrategy {
-		public void processar(ITransportador transportador);
+		public boolean processar(ITransportador transportador);
 		
 }

@@ -9,7 +9,7 @@ import enuns.ESemafaro;
 public class VerificarNomeNullo implements IStrategy {
 
 	@Override
-	public void processar(ITransportador transportador) {
+	public boolean processar(ITransportador transportador) {
 		
 		Entidade entidade = (Entidade) transportador.getEntidade();
 		
@@ -19,7 +19,7 @@ public class VerificarNomeNullo implements IStrategy {
 			// verificar se o atributo nome est? vazio ou se ? null
 			if(man.getNome().equals("") || man.getNome().equals(null)){
 				transportador.setMensagens("É obrigatório o preenchimento do nome!!!");
-				transportador.setSemafaro(ESemafaro.AMARELO);
+				return transportador.setSemafaro(ESemafaro.AMARELO);
 			}
 		}
 		if(entidade instanceof Especialidade){
@@ -27,8 +27,10 @@ public class VerificarNomeNullo implements IStrategy {
 			// verificar se o atributo nome est? vazio ou se ? null
 			if(esp.getDescricao().equals("") || esp.getDescricao().equals(null)){
 				transportador.setMensagens("É obrigatório o preenchimento da descrição");
-				transportador.setSemafaro(ESemafaro.AMARELO);
+				return transportador.setSemafaro(ESemafaro.AMARELO);
 			}
 		}
+		
+		return true;
 	}
 }

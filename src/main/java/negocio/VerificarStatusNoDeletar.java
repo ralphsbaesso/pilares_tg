@@ -39,8 +39,9 @@ public class VerificarStatusNoDeletar implements IStrategy {
 	}
 
 	@Override
-	public void processar(ITransportador transportador) {
+	public boolean processar(ITransportador transportador) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
+
 }

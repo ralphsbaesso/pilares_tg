@@ -77,9 +77,9 @@ public class VerificarData implements IStrategy {
 	} // processar
 
 	@Override
-	public void processar(ITransportador transportador) {
+	public boolean processar(ITransportador transportador) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 	
 }

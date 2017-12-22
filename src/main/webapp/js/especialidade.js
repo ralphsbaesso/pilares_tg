@@ -2,16 +2,16 @@
  * 
  * @returns
  */
+
 $(document).ready(function(){
 	
 	
-	especialdiade = new Object();
 	
 	
 	// OPERAÇÃO
 	$("body").on('click', '#operacao', function(){
 		
-		var operacao = $('#operacao').val().toLowerCase();
+		var operacao = $(this).val().toLowerCase();
 		if(operacao == 'salvar'){
 			salvar();
 		}else if(operacao == 'alterar'){
@@ -20,6 +20,9 @@ $(document).ready(function(){
 			excluir();
 		}else if(operacao == 'listar'){
 			listar();
+		}else if(operacao == 'limparcampos'){
+			
+			limparCampos();			
 		}
 	});
 	
@@ -46,8 +49,10 @@ $(document).ready(function(){
 	
 	// linkListar - exibe todos os mantenedores
 	$('#linkListar').click(function(){
+
+		//listar tudo, precisar mandar um objeto vazio
 		
-		listar();
+		listar.call(this, new Object());
 	
 	});//linkListar
 	
@@ -55,7 +60,6 @@ $(document).ready(function(){
 	// buttonAlterar
 	$('body').on('click', '.buttonAlterar', function(){
 		
-		//var id = $(this).attr('id');
 		var linhaTR = $(this).parent().parent().parent();
 		var id = linhaTR.find("td").eq(0).html();
 		var codigo = linhaTR.find("td").eq(1).html();
@@ -63,66 +67,59 @@ $(document).ready(function(){
 		var detalhamento = linhaTR.find("td").eq(3).html();
 		var dataCadastro = linhaTR.find("td").eq(4).html();
 		
-		this.especialidade = new Object();
+		especialidade = new Object();
 		
-		windows.especialidade.id = id;
-		windows.especialidade.codigo = codigo;
-		windows.especialidade.descricao = descricao;
-		windows.especialidade.detalhamento = detalhamento;
-		windows.especialidade.dataCadastro = dataCadastro;
+		especialidade.id = id;
+		especialidade.codigo = codigo;
+		especialidade.descricao = descricao;
+		especialidade.detalhamento = detalhamento;
+		especialidade.dataCadastro = dataCadastro;
 		
-		$('#divBody').html(montarAlterarExcluir());
-		
-//		alert(id);
-//		alert(codigo);
-//		alert(descricao);
-//		alert(detalhamento);
-//		alert(dataCadastro);
+		$('#divBody').html(montarAlterarExcluir.call(this, especialidade));
+	
 	});
 	
 	// buttonExcluir
 	$('body').on('click', '.buttonExcluir', function(){
 		
-		var id = $(this).attr('id');
+		var linhaTR = $(this).parent().parent().parent();
+		var id = linhaTR.find("td").eq(0).html();
+		var codigo = linhaTR.find("td").eq(1).html();
+		var descricao = linhaTR.find("td").eq(2).html();
+		var detalhamento = linhaTR.find("td").eq(3).html();
+		var dataCadastro = linhaTR.find("td").eq(4).html();
 		
-		excluir(id);
+		especialidade = new Object();
+		
+		especialidade.id = id;
+		especialidade.codigo = codigo;
+		especialidade.descricao = descricao;
+		especialidade.detalhamento = detalhamento;
+		
+		excluir(especialidade);
 	});
-	
-	
-//	//botão adicionarEspecialidade
-//	$('body').on('click','#addEspecialidade', function(){
-//		//alert('ok');
-//		var clone = $('#selectEspecialidade').clone();
-//		clone.children('button').remove();
-//		clone.removeAttr("id");
-//		clone.append("&nbsp;<button type='button' class='form-control btn-default deleteEspecialidade'>Remover Especialidade</button>");
-//		clone.hide();
-//		$('#selectEspecialidade').after(clone);
-//		clone.slideDown();
-//		
-//	});// botão adicionarEspecialidade
-	
-//	// botão deleteEspecialidade
-//	$("body").on("click",".deleteEspecialidade", function(){
-//		
-//		 var indice = $(".deleteEspecialidade").index(this);
-//		
-//          $(".deleteEspecialidade").eq(indice).parent().slideUp('fast', function() {  
-//               $(this).remove();  
-//          })  
-//         
-//    }); // deleteEspecialidade
 
 /* FUNÇÕES CHAMADAS AJAX */
 	
-	function listar(){
+	function listar(especialidade){
+		
+		if(especialidade == null){
+			var especialidade = new Object();
+			
+			especialidade.codigo = $("[name = txtCodigo]").val();
+			especialidade.descricao = $("[name = txtDescricao]").val();
+			especialidade.detalhamento = $("[name = txtDetalhamento]").val();
+		}
+		
+		json = JSON.stringify(especialidade);
 		
 		$.ajax({
 	          url : "Especialidade",
 	          type : 'post',
 	          dataType : 'html',
 	          data : {
-	               operacao : "listar"
+	               operacao : "listar",
+	               especialidade : json
 	          },
 	          beforeSend : function(){
 	               $("#divBody").html("<p align='center'>Carregando...</p>");
@@ -142,41 +139,52 @@ $(document).ready(function(){
 	    	 // verificar respostas
 	    	 if(semafaro == 'VERDE'){
 	    		
-		    	 var tBody = "";
+		    	 var msgRetorno;
 		    	 
-		    	 
-		    	 for(var i = 0; i < especialidades.length; i++){
+		    	 if(especialidades.length == 1){
+		    		 msgRetorno = montarAlterarExcluir.call(this, especialidades[0]);
+		    	 }else{
 		    		 
-		    		 especialidade = especialidades[i];
+		    		 var tBody = "";
 		    		 
-		    		 tBody += makeTableTBody(
-	 	 					makeTableTR(
-	    			 				makeTableTD(especialidade.id) +
-	    			 				makeTableTD(especialidade.codigo) +
-	    			 				makeTableTD(especialidade.descricao) +
-	    			 				makeTableTD(especialidade.detalhamento) +
-	    			 				makeTableTD(formatarData(especialidade.dataCadastro))+
-    			 					makeTableTDDoublo(htmlButtonUpdate(especialidade.id), htmlButtonDelete(especialidade.id))
-	    	 					)		
-	    			 		);
+		    		 for(var i = 0; i < especialidades.length; i++){
+		    			 
+		    			 especialidade = especialidades[i];
+		    			 
+		    			 tBody += makeTableTBody(
+		    					 makeTableTR(
+		    							 makeTableTD(especialidade.id) +
+		    							 makeTableTD(especialidade.codigo) +
+		    							 makeTableTD(especialidade.descricao) +
+		    							 makeTableTD(especialidade.detalhamento) +
+		    							 makeTableTD(formatarData(especialidade.dataCadastro))+
+		    							 makeTableTDDoublo(htmlButtonUpdate(especialidade.id), htmlButtonDelete(especialidade.id))
+		    					 )		
+		    			 );
+		    		 }
+		    		 
+		    		 var table = makeTable(
+		    				 makeTableTHead(
+		    						 makeTableTR(
+		    								 makeTableTD('ID') +
+		    								 makeTableTD('Código') +
+		    								 makeTableTD('Descrição') +
+		    								 makeTableTD('Detalhamento') +
+		    								 makeTableTD('Data Cadastro') 
+		    						 )
+		    				 ) + 
+		    				 tBody +
+		    				 makeTableTFoot("Quantidade de Especialidades cadastradas: " + especialidades.length, especialidades.length)
+		    		 );
+		    		 
+		    		 msgRetorno = table;
+		    		 
 		    	 }
 		    	 
-		    	 var table = makeTable(
-		    			 		makeTableTHead(
-		    			 			makeTableTR(
-		    			 					makeTableTD('ID') +
-		    			 					makeTableTD('Código') +
-		    			 					makeTableTD('Descrição') +
-		    			 					makeTableTD('Detalhamento') +
-		    			 					makeTableTD('Data Cadastro') 
-		    			 			)
-		    			 		) + 
-		    	 				tBody +
-		    			 		makeTableTFoot("Quantidade de Especialidades cadastradas: " + especialidades.length, especialidades.length)
-		    	 );
 		    	 
 		    	 $('#divBody').html('');
-		    	 $('#divBody').append(table)
+		    	 $('#divBody').append(msgRetorno);
+		    	 
 	    	 }else if(semafaro == 'VERMELHO'){
 	    		 
 	    		 if(mensagens != null && mensagens.length > 0){
@@ -199,7 +207,7 @@ $(document).ready(function(){
 
 	function salvar(){
 		
-		//var especialidade = new Object();
+		var especialidade = new Object();
 		
 		especialidade.descricao = $("[name = txtDescricao]").val();
 		especialidade.detalhamento = $("[name = txtDetalhamento]").val();
@@ -222,7 +230,13 @@ $(document).ready(function(){
 	     })
 	     .done(function(msg){
 	    	 
-			var json = JSON.parse(msg);
+	    	 try{
+	    		 var json = JSON.parse(msg);
+	    		 
+	    	 }catch(err){
+	    		 var json = msg;
+	    	 }
+	    	 
 			var especialidade = json.entidade;
 			var especialidades = json.entidades;
 			var mensagens = json.mensagens;
@@ -257,7 +271,17 @@ $(document).ready(function(){
 	}
 	
 	
-	function excluir(id){
+	function excluir(especialidade){
+		
+		if(especialidade == null){
+			var especialidade = new Object();
+			
+			especialidade.id = $("[name = txtId]").val();
+			especialidade.descricao = $("[name = txtDescricao]").val();
+			especialidade.detalhamento = $("[name = txtDetalhamento]").val();
+		}
+		
+		var json = JSON.stringify(especialidade);
 		
 		$.ajax({
 	          url : "Especialidade",
@@ -265,7 +289,7 @@ $(document).ready(function(){
 	          dataType : 'html',
 	          data : {
 	              operacao : "excluir",
-	              txtId : id
+	              especialidade : json
 	          },
 	          
 	          beforeSend : function(){
@@ -311,19 +335,20 @@ $(document).ready(function(){
 	
 	function alterar(){
 		
-		//var especialidade = new Object();
+		var especialidade = new Object();
 		
-		this.especialidade.descricao;
-		this.especialidade.detalhamento;
+		especialidade.id = $("[name = txtId]").val();
+		especialidade.descricao = $("[name = txtDescricao]").val();
+		especialidade.detalhamento = $("[name = txtDetalhamento]").val();
 		
-		var json = JSON.stringify(this.especialidade);
+		var json = JSON.stringify(especialidade);
 		
 		$.ajax({
 	          url : "Especialidade",
 	          type : 'post',
 	          dataType : 'html',
 	          data : {
-	               operacao : "salvar",
+	               operacao : "alterar",
 	               especialidade : json
 	          },
 	          
@@ -384,7 +409,7 @@ $(document).ready(function(){
 		"<input class='form-control' type='text' placeholder='Digite aqui..' id='txtDetalhamento' name='txtDetalhamento'> </li>" +
 		"<li class='list-group-item form-inline'>" +
 		"<button class='btn btn-outline-success form-control' id='operacao' value='salvar'>Salvar</button>" +
-		"<button class='btn btn-outline-warning form-control'>Limpar</button>" +
+		"<button class='btn btn-outline-warning form-control' id='operacao' value='limparCampos'>Limpar</button>" +
 		"</li>" +
 		"</ul>" +
 		"</div>" +
@@ -402,11 +427,11 @@ $(document).ready(function(){
 		"<h1 class='display-4'>Pesquisa</h1>" +
 		"<ul class='list-group'>" +
 		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white'>Código</label>" +
-		"<input class='form-control' type='text' placeholder='Digite aqui..' id='txtDescricao' name='txtDescricao'> </li>" +
+		"<input class='form-control' type='text' placeholder='Digite aqui..' id='txtCodigo' name='txtCodigo'> </li>" +
 		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' >Descrição</label>" +
 		"<input class='form-control' type='text' placeholder='Digite aqui..'id='txtDetalhamento' name='txtDescricao'> </li>" +
 		"<li class='list-group-item form-inline'>" +
-		"<button class='btn btn-outline-success form-control btn-sm w-100' id='operacao'>Pesquisar</button>" +
+		"<button class='btn btn-outline-success form-control btn-sm w-100' value='listar' id='operacao'>Pesquisar</button>" +
 		"</li>" +
 		"</ul>" +
 		"</div>" +
@@ -415,25 +440,26 @@ $(document).ready(function(){
 		"</div>" ;
 	}
 	
-	function montarAlterarExcluir(){
+	function montarAlterarExcluir(especialidade){
 		
 		return "<div class='py-5'>" +
 		"<div class='container'>" +
 		"<div class='row'>" +
 		"<div class='col-md-8'>" +
 		"<h1 class='display-4'>Alterar</h1>" +
+		"<input type='hidden' name='txtId' value='" + especialidade.id + "'>" +
 		"<ul class='list-group'>" +
-		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='txtDescricao' name='txtDescricao'>Código</label>" +
+		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='lblCodigo'>Código</label>" +
 		"<strong>" +
-		"<label class='form-control' id='txtDescricao' name='txtDescricao'>" + windows.especialidade.codigo + "</label>" +
+		"<label class='form-control' name='txtCodigo'>" + especialidade.codigo + "</label>" +
 		"</strong>" +
-		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='txtDescricao' name='txtDescricao'>Descrição</label>" +
-		"<input class='form-control' type='text' value='" + windows.especialidade.descricao + "'> </li>" +
-		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='txtDetalhamento' name='txtDetalhamento'>Detalhamento</label>" +
-		"<input class='form-control w-75' type='text' value='" + windows.especialidade.detalhamento + "'> </li>" +
+		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' name='lblDescricao'>Descrição</label>" +
+		"<input class='form-control' type='text' name='txtDescricao' value='" + especialidade.descricao + "'> </li>" +
+		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' name='lblDetalhamento'>Detalhamento</label>" +
+		"<input class='form-control w-75' type='text' name='txtDetalhamento' value='" + especialidade.detalhamento + "'> </li>" +
 		"<li class='list-group-item form-inline'>" +
 		"<button class='btn btn-outline-warning form-control' name='operacao' id='operacao' value='alterar' style='width:49%'>Alterar</button>" +
-		"<button class='btn btn-outline-danger form-control' name='operacao' id='operacao' style='width:49%'>Excluir</button>" +
+		"<button class='btn btn-outline-danger form-control' name='operacao' id='operacao' value='excluir' style='width:49%'>Excluir</button>" +
 		"</li>" +
 		"</ul>" +
 		"</div>" +
@@ -570,6 +596,10 @@ $(document).ready(function(){
 			 $('#divAdvertencia').html('');
 			 // limpando as mensagens
 		 });
+	}
+	
+	function limparCampos(){
+		$("input").val("");
 	}
 	
 }); // (document).ready

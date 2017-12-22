@@ -61,7 +61,8 @@ public class AtualizarStatusOs implements IStrategy {
 
 
 	@Override
-	public void processar(ITransportador transportador) {
+	public boolean processar(ITransportador transportador) {
+		return false;
 		// TODO Auto-generated method stub
 		
 	}

@@ -18,7 +18,7 @@ public class VerificarCamposVazioOS implements IStrategy {
 			
 			// verificar se Autor est? vazio. Se for zero ? porque est? vazio
 			if(os.getAutor().getId() == 0){
-				sb.append("? obrigat?rio o preenchimento do campo 'Autor'");
+				sb.append("É obrigatório o preenchimento do campo 'Autor'");
 				sb.append("\n");
 			}
 			
@@ -48,9 +48,10 @@ public class VerificarCamposVazioOS implements IStrategy {
 	}
 
 	@Override
-	public void processar(ITransportador transportador) {
+	public boolean processar(ITransportador transportador) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
+
 
 }

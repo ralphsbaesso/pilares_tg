@@ -53,8 +53,10 @@ public abstract class ATransportador implements ITransportador{
 		return semafaro;
 	}
 
-	public void setSemafaro(ESemafaro semafaro) {
+	public boolean setSemafaro(ESemafaro semafaro) {
 		this.semafaro = semafaro;
+		
+		return semafaro.getValor() > ESemafaro.AMARELO.getValor()? false : true;
 	}
 	
 	public void recebeObjetoMensagem(ITransportador obj){

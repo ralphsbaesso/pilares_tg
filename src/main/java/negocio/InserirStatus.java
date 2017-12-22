@@ -12,14 +12,14 @@ import enuns.ESemafaro;
 public class InserirStatus implements IStrategy {
 
 	@Override
-	public void processar(ITransportador transportador) {
+	public boolean processar(ITransportador transportador) {
 		
 //		if(entidade instanceof OrdemDeServico){
 //			// atualizar status
 //			OrdemDeServico os = (OrdemDeServico)entidade;
 //			os.setStatus("aberta");
 //		}
-		return ;
+		return true;
 	}
 	
 }

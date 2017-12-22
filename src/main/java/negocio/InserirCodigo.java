@@ -14,7 +14,7 @@ import enuns.ESemafaro;
 public class InserirCodigo implements IStrategy {
 
 	@Override
-	public void processar(ITransportador transportador) {
+	public boolean processar(ITransportador transportador) {
 		
 		Entidade entidade = (Entidade) transportador.getEntidade();
 	
@@ -33,7 +33,7 @@ public class InserirCodigo implements IStrategy {
 					taf.setCodigo(gerarCodigo(taf));
 				}
 			}
-			return;
+			return true;
 		}
 		
 		// tarefa
@@ -49,19 +49,18 @@ public class InserirCodigo implements IStrategy {
 					plan.setCodigo(gerarCodigo(plan));
 				}
 			}
-			return;
+			return true;
 		}
 		
 		// especialidade
 		if( entidade instanceof Especialidade){
 			Especialidade especialidade = (Especialidade)entidade;
 			especialidade.setCodigo(gerarCodigo(entidade));
-			return;
+			return true;
 		}
 		
 		transportador.setMensagens("Erro na inserção do código");
-		transportador.setSemafaro(ESemafaro.AMARELO);
-		return;
+		return transportador.setSemafaro(ESemafaro.AMARELO);
 	}
 	
 	private String gerarCodigo(Entidade ent){

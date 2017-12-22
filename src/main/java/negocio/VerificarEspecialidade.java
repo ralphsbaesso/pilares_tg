@@ -14,17 +14,17 @@ public class VerificarEspecialidade implements IStrategy {
 			Mantenedor man = (Mantenedor) entidade;
 			// verificar se h? pelo menos uma especialidade
 			if(man.getEspecialidades().size() < 1){
-				return "? obrigat?rio escolher uma especialidade!!!";
+				return "É obrigatório escolher uma especialidade!!!";
 			}
 		}
 		return null;
 	}
 
-
 	@Override
-	public void processar(ITransportador transportador) {
+	public boolean processar(ITransportador transportador) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
+
 
 }
