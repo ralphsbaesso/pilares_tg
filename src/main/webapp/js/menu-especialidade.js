@@ -5,9 +5,6 @@
 
 $(document).ready(function(){
 	
-	
-	
-	
 	// OPERAÇÃO
 	$("body").on('click', '#operacao', function(){
 		
@@ -111,98 +108,80 @@ $(document).ready(function(){
 			especialidade.detalhamento = $("[name = txtDetalhamento]").val();
 		}
 		
-		json = JSON.stringify(especialidade);
+		var objEspecialidade = new Especialidade();
+		var json = objEspecialidade.listar(especialidade);
 		
-		$.ajax({
-	          url : "Especialidade",
-	          type : 'post',
-	          dataType : 'html',
-	          data : {
-	               operacao : "listar",
-	               especialidade : json
-	          },
-	          beforeSend : function(){
-	               $("#divBody").html("<p align='center'>Carregando...</p>");
-	          }
-	     })
-	     .done(function(msg){
+		var especialidade = json.entidade;
+		var especialidades = json.entidades;
+		var mensagens = json.mensagens;
+		var semafaro = json.semafaro;
+		
+		var mensagem = "";
+    	 
+    	 
+    	 // verificar respostas
+    	 if(semafaro == 'VERDE'){
+    		
+	    	 var msgRetorno;
 	    	 
-	    	var json = JSON.parse(msg);
-			var especialidade = json.entidade;
-			var especialidades = json.entidades;
-			var mensagens = json.mensagens;
-			var semafaro = json.semafaro;
-			
-			var mensagem = "";
-	    	 
-	    	 
-	    	 // verificar respostas
-	    	 if(semafaro == 'VERDE'){
-	    		
-		    	 var msgRetorno;
-		    	 
-		    	 if(especialidades.length == 1){
-		    		 msgRetorno = montarAlterarExcluir.call(this, especialidades[0]);
-		    	 }else{
-		    		 
-		    		 var tBody = "";
-		    		 
-		    		 for(var i = 0; i < especialidades.length; i++){
-		    			 
-		    			 especialidade = especialidades[i];
-		    			 
-		    			 tBody += makeTableTBody(
-		    					 makeTableTR(
-		    							 makeTableTD(especialidade.id) +
-		    							 makeTableTD(especialidade.codigo) +
-		    							 makeTableTD(especialidade.descricao) +
-		    							 makeTableTD(especialidade.detalhamento) +
-		    							 makeTableTD(formatarData(especialidade.dataCadastro))+
-		    							 makeTableTDDoublo(htmlButtonUpdate(especialidade.id), htmlButtonDelete(especialidade.id))
-		    					 )		
-		    			 );
-		    		 }
-		    		 
-		    		 var table = makeTable(
-		    				 makeTableTHead(
-		    						 makeTableTR(
-		    								 makeTableTD('ID') +
-		    								 makeTableTD('Código') +
-		    								 makeTableTD('Descrição') +
-		    								 makeTableTD('Detalhamento') +
-		    								 makeTableTD('Data Cadastro') 
-		    						 )
-		    				 ) + 
-		    				 tBody +
-		    				 makeTableTFoot("Quantidade de Especialidades cadastradas: " + especialidades.length, especialidades.length)
-		    		 );
-		    		 
-		    		 msgRetorno = table;
-		    		 
-		    	 }
-		    	 
-		    	 
-		    	 $('#divBody').html('');
-		    	 $('#divBody').append(msgRetorno);
-		    	 
-	    	 }else if(semafaro == 'VERMELHO'){
+	    	 if(especialidades.length == 1){
+	    		 msgRetorno = montarAlterarExcluir.call(this, especialidades[0]);
+	    	 }else{
 	    		 
-	    		 if(mensagens != null && mensagens.length > 0){
+	    		 var tBody = "";
+	    		 
+	    		 for(var i = 0; i < especialidades.length; i++){
 	    			 
-	    			 for(var i = 0; i < mensagens.length; i++){
-	    				 mensagem += mensagens[i];
-	    				 mensagem += "</br>";
-	    			 }
-	    		 }else{
-	    			 mensagem = "Erro!"
+	    			 especialidade = especialidades[i];
+	    			 
+	    			 tBody += makeTableTBody(
+	    					 makeTableTR(
+	    							 makeTableTD(especialidade.id) +
+	    							 makeTableTD(especialidade.codigo) +
+	    							 makeTableTD(especialidade.descricao) +
+	    							 makeTableTD(especialidade.detalhamento) +
+	    							 makeTableTD(formatarData(especialidade.dataCadastro))+
+	    							 makeTableTDDoublo(htmlButtonUpdate(especialidade.id), htmlButtonDelete(especialidade.id))
+	    					 )		
+	    			 );
 	    		 }
 	    		 
-	    		 modalAdvertencia(mensagem);
+	    		 var table = makeTable(
+	    				 makeTableTHead(
+	    						 makeTableTR(
+	    								 makeTableTD('ID') +
+	    								 makeTableTD('Código') +
+	    								 makeTableTD('Descrição') +
+	    								 makeTableTD('Detalhamento') +
+	    								 makeTableTD('Data Cadastro') 
+	    						 )
+	    				 ) + 
+	    				 tBody +
+	    				 makeTableTFoot("Quantidade de Especialidades cadastradas: " + especialidades.length, especialidades.length)
+	    		 );
+	    		 
+	    		 msgRetorno = table;
+	    		 
 	    	 }
-	     })
-	     .fail(function(jqXHR, textStatus, msg){
-	          alert(msg);
-	     }); 
+	    	 
+	    	 
+	    	 $('#divBody').html('');
+	    	 $('#divBody').append(msgRetorno);
+	    	 
+    	 }else if(semafaro == 'VERMELHO'){
+    		 
+    		 if(mensagens != null && mensagens.length > 0){
+    			 
+    			 for(var i = 0; i < mensagens.length; i++){
+    				 mensagem += mensagens[i];
+    				 mensagem += "</br>";
+    			 }
+    		 }else{
+    			 mensagem = "Erro!"
+    		 }
+    		 
+    		 modalAdvertencia(mensagem);
+    	 }
 	}
 
 	function salvar(){
@@ -212,66 +191,46 @@ $(document).ready(function(){
 		especialidade.descricao = $("[name = txtDescricao]").val();
 		especialidade.detalhamento = $("[name = txtDetalhamento]").val();
 		
-		var json = JSON.stringify(especialidade);
+		var objEspecialidade = new Especialidade();
 		
-		$.ajax({
-	          url : "Especialidade",
-	          type : 'post',
-	          dataType : 'json',
-	          data : {
-	               operacao : "salvar",
-	               especialidade : json
-	               
-	          },
-	          
-	          beforeSend : function(){
-	               $("#sucesso").html("<p align='center'>Carregando...</p>");
-	          }
-	     })
-	     .done(function(msg){
-	    	 
-	    	 try{
-	    		 var json = JSON.parse(msg);
-	    		 
-	    	 }catch(err){
-	    		 var json = msg;
-	    	 }
-	    	 
-			var especialidade = json.entidade;
-			var especialidades = json.entidades;
-			var mensagens = json.mensagens;
-			var semafaro = json.semafaro;
-			
-			var mensagem = "";
-	    	 
-	    	 // verificar respostas
-	    	 if(semafaro == 'VERDE'){
-	    		 
-	    		 $('#divBody').html("");
-	    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " salvo com sucesso!"));
-	    		 
-	    	 }else if(semafaro == 'VERMELHO'){
-	    		 
-	    		 if(mensagens != null && mensagens.length > 0){
-	    			 
-	    			 for(var i = 0; i < mensagens.length; i++){
-	    				 mensagem += mensagens[i];
-	    				 mensagem += "</br>";
-	    			 }
-	    		 }else{
-	    			 mensagem = "Erro!"
-	    		 }
-	    		 
-	    		 modalAdvertencia(mensagem);
-	    	 }
-	     })
-	     .fail(function(jqXHR, textStatus, msg){
-	          alert(msg + " Erro grave!!!");
-	     });
+		var json = objEspecialidade.salvar(especialidade);
+
+		var especialidade = json.entidade;
+		var especialidades = json.entidades;
+		var mensagens = json.mensagens;
+		var semafaro = json.semafaro;
+
+		var mensagem = "";
+
+		// verificar respostas
+		if (semafaro == 'VERDE') {
+
+			$('#divBody').html("");
+			$('#divBody').append(
+					makeMensagemSucesso("Especialidade "
+							+ especialidade.descricao
+							+ " salvo com sucesso!"));
+
+		} else if (semafaro == 'VERMELHO') {
+
+			if (mensagens != null && mensagens.length > 0) {
+
+				for (var i = 0; i < mensagens.length; i++) {
+					mensagem += mensagens[i];
+					mensagem += "</br>";
+				}
+			} else {
+				mensagem = "Erro!"
+			}
+
+			modalAdvertencia(mensagem);
+		} else{
+			modalAdvertencia("Erro desconhecido");
+		}
 	}
 	
 	
-	function excluir(especialidade){
+	function excluir(especialidade){		
 		
 		if(especialidade == null){
 			var especialidade = new Object();
@@ -281,115 +240,79 @@ $(document).ready(function(){
 			especialidade.detalhamento = $("[name = txtDetalhamento]").val();
 		}
 		
-		var json = JSON.stringify(especialidade);
+		var objEspecialidade = new Especialidade();
 		
-		$.ajax({
-	          url : "Especialidade",
-	          type : 'post',
-	          dataType : 'html',
-	          data : {
-	              operacao : "excluir",
-	              especialidade : json
-	          },
-	          
-	          beforeSend : function(){
-	               $("#sucesso").html("<p align='center'>Carregando...</p>");
-	          }
-	     })
-	     .done(function(msg){
+		var json = objEspecialidade.excluir(especialidade);
 	    	 
-			var json = JSON.parse(msg);
-			var especialidade = json.entidade;
-			var especialidades = json.entidades;
-			var mensagens = json.mensagens;
-			var semafaro = json.semafaro;
-			
-			var mensagem = "";
-	    	 
-	    	 // verificar respostas
-	    	 if(semafaro == 'VERDE'){
-	    		 
-	    		 $('#divBody').html("");
-	    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " excluida com sucesso!"));
-	    		 
-	    	 }else if(semafaro == 'VERMELHO'){
-	    		 
-	    		 if(mensagens != null && mensagens.length > 0){
-	    			 
-	    			 for(var i = 0; i < mensagens.length; i++){
-	    				 mensagem += mensagens[i];
-	    				 mensagem += "</br>";
-	    			 }
-	    		 }else{
-	    			 mensagem = "Erro!"
-	    		 }
-	    		 
-	    		 modalAdvertencia(mensagem);
-	    	 }
-	     })
-	     .fail(function(jqXHR, textStatus, msg){
-	          alert(msg + " Erro grave!!!");
-	     });
+		var especialidade = json.entidade;
+		var especialidades = json.entidades;
+		var mensagens = json.mensagens;
+		var semafaro = json.semafaro;
 		
+		var mensagem = "";
+    	 
+    	 // verificar respostas
+    	 if(semafaro == 'VERDE'){
+    		 
+    		 $('#divBody').html("");
+    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " excluida com sucesso!"));
+    		 
+    	 }else if(semafaro == 'VERMELHO'){
+    		 
+    		 if(mensagens != null && mensagens.length > 0){
+    			 
+    			 for(var i = 0; i < mensagens.length; i++){
+    				 mensagem += mensagens[i];
+    				 mensagem += "</br>";
+    			 }
+    		 }else{
+    			 mensagem = "Erro!"
+    		 }
+    		 
+    		 modalAdvertencia(mensagem);
+    	 }
 	}
 	
-	function alterar(){
+	function alterar(especialidade){
 		
-		var especialidade = new Object();
-		
-		especialidade.id = $("[name = txtId]").val();
-		especialidade.descricao = $("[name = txtDescricao]").val();
-		especialidade.detalhamento = $("[name = txtDetalhamento]").val();
-		
-		var json = JSON.stringify(especialidade);
-		
-		$.ajax({
-	          url : "Especialidade",
-	          type : 'post',
-	          dataType : 'html',
-	          data : {
-	               operacao : "alterar",
-	               especialidade : json
-	          },
-	          
-	          beforeSend : function(){
-	               $("#sucesso").html("<p align='center'>Carregando...</p>");
-	          }
-	     })
-	     .done(function(msg){
-	    	 
-			var json = JSON.parse(msg);
-			var especialidade = json.entidade;
-			var especialidades = json.entidades;
-			var mensagens = json.mensagens;
-			var semafaro = json.semafaro;
+		if(especialidade == null){
+			var especialidade = new Object();	
 			
-			var mensagem = "";
-	    	 
-	    	 // verificar respostas
-	    	 if(semafaro == 'VERDE'){
-	    		 
-	    		 $('#divBody').html("");
-	    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " alterada com sucesso!"));
-	    		 
-	    	 }else if(semafaro == 'VERMELHO'){
-	    		 
-	    		 if(mensagens != null && mensagens.length > 0){
-	    			 
-	    			 for(var i = 0; i < mensagens.length; i++){
-	    				 mensagem += mensagens[i];
-	    				 mensagem += "</br>";
-	    			 }
-	    		 }else{
-	    			 mensagem = "Erro!"
-	    		 }
-	    		 
-	    		 modalAdvertencia(mensagem);
-	    	 }
-	     })
-	     .fail(function(jqXHR, textStatus, msg){
-	          alert(msg + " Erro grave!!!");
-	     });
+			especialidade.id = $("[name = txtId]").val();
+			especialidade.descricao = $("[name = txtDescricao]").val();
+			especialidade.detalhamento = $("[name = txtDetalhamento]").val();
+		}
+		
+		var objEspecialidade = new Especialidade();
+		var json = objEspecialidade.alterar(especialidade);
+		
+		var especialidade = json.entidade;
+		var especialidades = json.entidades;
+		var mensagens = json.mensagens;
+		var semafaro = json.semafaro;
+		
+		var mensagem = "";
+    	 
+    	 // verificar respostas
+    	 if(semafaro == 'VERDE'){
+    		 
+    		 $('#divBody').html("");
+    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " alterada com sucesso!"));
+    		 
+    	 }else if(semafaro == 'VERMELHO'){
+    		 
+    		 if(mensagens != null && mensagens.length > 0){
+    			 
+    			 for(var i = 0; i < mensagens.length; i++){
+    				 mensagem += mensagens[i];
+    				 mensagem += "</br>";
+    			 }
+    		 }else{
+    			 mensagem = "Erro!"
+    		 }
+    		 
+    		 modalAdvertencia(mensagem);
+    	 }
 	}
 	
 	
