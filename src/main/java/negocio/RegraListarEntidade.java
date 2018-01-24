@@ -17,7 +17,7 @@ public class RegraListarEntidade implements IStrategy {
 		
 		Entidade entidade = (Entidade) transportador.getEntidade();
 		TransportadorFachada transportadorFachada = (TransportadorFachada) transportador;
-		Idao dao = (DaoEspecialidade) transportadorFachada.mapaObjetos().get("dao");
+		Idao dao = transportadorFachada.mapaObjetos().get("dao");
 		
 		if(transportador.getSemafaro().getValor() > ESemafaro.VERDE.getValor()) {
 			return transportador.setSemafaro(ESemafaro.VERMELHO);

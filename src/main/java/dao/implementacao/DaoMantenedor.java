@@ -1,31 +1,21 @@
 package dao.implementacao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import dao.Idao;
-import dominio.*;
+import dominio.Entidade;
+import dominio.Especialidade;
+import dominio.Mantenedor;
 
 public class DaoMantenedor implements Idao {
 
 	// objetos para coneccao
-    private final String url = "jdbc:oracle:thin:@localhost:1521:XE";
-    private final String usuario = "les";
-    private final String senha = "123";
     private String sql;
-    private String msg;
-    private Connection conexao;
     private PreparedStatement preparedStatement;
     private ResultSet resultset;
     
@@ -33,8 +23,6 @@ public class DaoMantenedor implements Idao {
 	public boolean salvar(Entidade entidade) {
 
 		Mantenedor mantenedor = (Mantenedor)entidade;
-		
-		conectar();
 	        
         sql = "INSERT INTO Mantenedores"
         		+ " (nome, cpf, registro, email,data_cadastro, sexo)"
@@ -42,7 +30,7 @@ public class DaoMantenedor implements Idao {
         //System.out.println(sql);
         
         try {
-            preparedStatement = conexao.prepareStatement(sql);
+            preparedStatement = Conexao.conexao.prepareStatement(sql);
             preparedStatement.setString(1, mantenedor.getNome());
             preparedStatement.setString(2, mantenedor.getCpf());
             preparedStatement.setString(3, mantenedor.getRegistro());
@@ -53,7 +41,7 @@ public class DaoMantenedor implements Idao {
             
             // resgatar a id deste mantenedor salvo
             sql = "select id from mantenedores where cpf = ?";
-            preparedStatement = conexao.prepareStatement(sql);
+            preparedStatement = Conexao.conexao.prepareStatement(sql);
             preparedStatement.setString(1, mantenedor.getCpf());
             resultset = preparedStatement.executeQuery();
 			
@@ -63,10 +51,10 @@ public class DaoMantenedor implements Idao {
             
             // dados da tabela MANTENEDORES_ESPECIALIDADES
             sql = "INSERT INTO MANTENEDORES_ESPECIALIDADES"
-            		+ " (mantenedores_id, especialidades_id)"
+            		+ " (mantenedor_id, especialidade_id)"
             		+ " VALUES (?, ?)";
             for(Especialidade esp:  mantenedor.getEspecialidades()){
-            	preparedStatement = conexao.prepareStatement(sql);
+            	preparedStatement = Conexao.conexao.prepareStatement(sql);
                 preparedStatement.setInt(1, mantenedor.getId());
                 preparedStatement.setInt(2, esp.getId());
                 preparedStatement.execute();
@@ -75,8 +63,6 @@ public class DaoMantenedor implements Idao {
             preparedStatement.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }finally{
-        	desconectar();
         }
         
 		return true;
@@ -85,21 +71,18 @@ public class DaoMantenedor implements Idao {
 	@Override
 	public boolean alterar(Entidade entidade) {
 		Mantenedor mantenedor = (Mantenedor)entidade;
-		
-		conectar();
 	        
         sql = "UPDATE Mantenedores"
-        		+ " SET nome = ?, registro = ?, email = ?, sexo = ? "
-        		+ " WHERE cpf = ?";
+        		+ " SET nome = ?, email = ?, sexo = ? "
+        		+ " WHERE id = ?";
         //System.out.println(sql + " - cpf: " + mantenedor.getCpf());
         
         try {
-            preparedStatement = conexao.prepareStatement(sql);
+            preparedStatement = Conexao.conexao.prepareStatement(sql);
             preparedStatement.setString(1, mantenedor.getNome());
-            preparedStatement.setString(2, mantenedor.getRegistro());
-            preparedStatement.setString(3, mantenedor.getEmail());
-            preparedStatement.setString(4, mantenedor.getSexo());
-            preparedStatement.setString(5, mantenedor.getCpf());
+            preparedStatement.setString(2, mantenedor.getEmail());
+            preparedStatement.setString(3, mantenedor.getSexo());
+            preparedStatement.setInt(4, mantenedor.getId());
             preparedStatement.execute();
             preparedStatement.close();
             
@@ -108,28 +91,26 @@ public class DaoMantenedor implements Idao {
             // primeiro apagar todos dados existente desta entidade
             
             sql = "delete from MANTENEDORES_ESPECIALIDADES "
-				  + " where MANTENEDORES_ESPECIALIDADES.MANTENEDORES_ID = " 
+				  + " where MANTENEDORES_ESPECIALIDADES.MANTENEDOR_ID = " 
 				  + "(select id from mantenedores "
-				  + " where cpf = ?) ";
+				  + " where id = ?) ";
 				  
-			  preparedStatement = conexao.prepareStatement(sql);
-			  preparedStatement.setString(1, mantenedor.getCpf());
+			  preparedStatement = Conexao.conexao.prepareStatement(sql);
+			  preparedStatement.setInt(1, mantenedor.getId());
 			  preparedStatement.execute();
             
 			// inserir novas especialidades para mantenedor
             sql = "INSERT INTO MANTENEDORES_ESPECIALIDADES"
-            		+ " (mantenedores_id, especialidades_id)"
+            		+ " (mantenedor_id, especialidade_id)"
             		+ " VALUES (?, ?)";
             for(Especialidade esp:  mantenedor.getEspecialidades()){
-            	preparedStatement = conexao.prepareStatement(sql);
+            	preparedStatement = Conexao.conexao.prepareStatement(sql);
                 preparedStatement.setInt(1, mantenedor.getId());
                 preparedStatement.setInt(2, esp.getId());
                 preparedStatement.execute();
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }finally{
-        	desconectar();
         }
         
 		return true;
@@ -139,16 +120,14 @@ public class DaoMantenedor implements Idao {
 	public boolean excluir(Entidade entidade) {
 		
 		Mantenedor mantenedor = (Mantenedor)entidade;
-		
-		conectar();
         
 		// Deletar a dependencia de mantenedor com especialidade
 		
 		sql = "DELETE FROM MANTENEDORES_ESPECIALIDADES "
-        		+ "WHERE  mantenedores_id = ?";
+        		+ "WHERE  mantenedor_id = ?";
         
         try {
-            preparedStatement = conexao.prepareStatement(sql);
+            preparedStatement = Conexao.conexao.prepareStatement(sql);
             preparedStatement.setInt(1, mantenedor.getId());
             preparedStatement.execute();
         } catch (SQLException ex) {
@@ -157,17 +136,15 @@ public class DaoMantenedor implements Idao {
 		
 		// Deletar o mantenedor
         sql = "DELETE FROM Mantenedores "
-        		+ "WHERE  cpf = (?)";
+        		+ "WHERE  id = ?";
         
         try {
-            preparedStatement = conexao.prepareStatement(sql);
-            preparedStatement.setString(1, mantenedor.getCpf());
+            preparedStatement = Conexao.conexao.prepareStatement(sql);
+            preparedStatement.setInt(1, mantenedor.getId());
             preparedStatement.execute();
             preparedStatement.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }finally{
-        	desconectar();
         }
         
 		return true;
@@ -179,15 +156,16 @@ public class DaoMantenedor implements Idao {
 		List <Mantenedor> mantenedores = new ArrayList();
 		Mantenedor mantenedor = (Mantenedor)entidade;
 		
-		try {
-			conectar();
-			
+		try {			
 			// Primeira op??o
-			// Buscar dados utilizando filtro 'cpf'
-			if(mantenedor.getCpf() != null){	// objeto n?o vazio?
+			// Buscar dados utilizando filtros
+			if(mantenedor.getCpf() != null  && mantenedor.getNome() != null){	// objeto n?o vazio?
 				
-				// buscar uma entidade
-				mantenedores = listarUmaEntidade(mantenedor);
+				if(!mantenedor.getCpf().equals("") && ! mantenedor.getNome().equals("")) {
+					
+					// buscar uma entidade
+					mantenedores = listarUmaEntidade(mantenedor);
+				}
 			
 			}else{
 				// Segundo op??o
@@ -204,38 +182,59 @@ public class DaoMantenedor implements Idao {
 			e.printStackTrace();
 		}
 		
-		desconectar();
-		
 		return mantenedores;
-	}
-	
-	//*****************//
-	// metodos privados
-	private void conectar(){
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-			conexao = DriverManager.getConnection(url, usuario, senha);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			 //TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	private void desconectar(){
-		try {
-			conexao.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	private List listarUmaEntidade(Mantenedor mantenedor){
 		
 		List<Mantenedor> mantenedores = new ArrayList();
+		List<String> parametros = new ArrayList();
+		StringBuilder sbSql = new StringBuilder();
+		
+		
+		try {
+			
+			sbSql.append("SELECT * FROM MANTENEDORES WHERE 1 = 1 ");
+			
+			if(mantenedor.getClass() != null && !mantenedor.getCpf().isEmpty()) {
+				
+				sbSql.append(" AND cpf = ? ");
+				parametros.add(mantenedor.getCpf());
+				
+			} else if (mantenedor.getNome() != null) {
+
+				sbSql.append(" AND LOWER(DESCRICAO) LIKE ? ");
+				parametros.add("%" + mantenedor.getNome().toLowerCase() + "%");
+			}
+			
+			preparedStatement = Conexao.conexao.prepareStatement(sbSql.toString());
+					
+			// carregar parametros de filtro do tipo String
+			for (int i = 0; i <= parametros.size(); i++) {
+				preparedStatement.setString(i, parametros.get(i));
+			}
+			
+			resultset = preparedStatement.executeQuery();
+			
+			while(resultset.next()){
+				man = new Mantenedor();
+				man.setId(resultset.getInt("id"));
+				man.setNome(resultset.getString("nome"));
+				man.setCpf(resultset.getString("cpf"));
+				man.setRegistro(resultset.getString("registro"));
+				man.setEmail(resultset.getString("email"));
+				man.setSexo(resultset.getString("sexo"));
+				try{
+					man.getDataCadastro().setTime(resultset.getTimestamp("data_cadastro"));
+					}catch(java.lang.NullPointerException e){
+					System.out.println("erro");
+					man.getDataCadastro().getInstance();
+				}
+				
+				mantenedores.add(man);
+			}
+		}
+		
 		
 		sql = "SELECT * "
 				+ "FROM mantenedores "
@@ -265,7 +264,7 @@ public class DaoMantenedor implements Idao {
 		List<Mantenedor> mantenedores = new ArrayList();
 		
 		try {
-			preparedStatement = conexao.prepareStatement(sql);
+			preparedStatement = Conexao.conexao.prepareStatement(sql);
 			if(mantenedor != null){
 				
 				// buscar o mantenedor espec?fico
@@ -305,12 +304,12 @@ public class DaoMantenedor implements Idao {
 						  + "ESPECIALIDADES.data_cadastro," 
 						  + "ESPECIALIDADES.codigo " 
 						  + "from MANTENEDORES_ESPECIALIDADES join ESPECIALIDADES "
-						  + "on(ESPECIALIDADES.ID = MANTENEDORES_ESPECIALIDADES.especialidades_id) "
+						  + "on(ESPECIALIDADES.ID = MANTENEDORES_ESPECIALIDADES.especialidade_id) "
 						  + " join mantenedores"
-						  + " on (MANTENEDORES.ID = MANTENEDORES_ESPECIALIDADES.mantenedores_id)"
+						  + " on (MANTENEDORES.ID = MANTENEDORES_ESPECIALIDADES.mantenedor_id)"
 						  + " where cpf = ?";
 				
-				preparedStatement = conexao.prepareStatement(sql2);
+				preparedStatement = Conexao.conexao.prepareStatement(sql2);
 				preparedStatement.setString(1, mantenedor.getCpf());
 				resultset = preparedStatement.executeQuery();
 				

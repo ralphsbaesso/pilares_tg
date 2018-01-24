@@ -43,12 +43,11 @@ public class Servlet extends HttpServlet {
 		commands.put("listar", new CommandListar());
 		
 		vhs = new HashMap();
-		vhs.put("/Pilares/Mantenedor", new VhMantenedor());
+		vhs.put("/PilaresTG/Mantenedor", new VhMantenedor());
 		vhs.put("/PilaresTG/Especialidade", new VhEspecialidade());
-		vhs.put("/Pilares/OrdemDeServico", new VhOrdemDeServico());
-		vhs.put("/Pilares/Planejamento", new VhPlanejamentos());
-		vhs.put("/Pilares/Apontamento", new VhApontamentos());
-		vhs.put("/Pilares/Analise", new VhAnalise());
+		vhs.put("/PilaresTG/OrdemDeServico", new VhOrdemDeServico());
+		vhs.put("/PilaresTG/Planejamento", new VhPlanejamentos());
+		vhs.put("/PilaresTG/Apontamento", new VhApontamentos());
 	}
 	
 

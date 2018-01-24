@@ -1,8 +1,6 @@
 package dao.implementacao;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +10,6 @@ import java.util.List;
 import dao.Idao;
 import dominio.Entidade;
 import dominio.Especialidade;
-import dominio.Especialidade;
-import dao.implementacao.*;
 
 public class DaoEspecialidade implements Idao {
 
@@ -144,8 +140,6 @@ public class DaoEspecialidade implements Idao {
 
 		List<Especialidade> especialidades = new ArrayList();
 		Especialidade esp;
-		String parametro = "";
-		int indice = 0;
 
 		List<String> parametros = new ArrayList();
 
@@ -158,21 +152,19 @@ public class DaoEspecialidade implements Idao {
 			if (especialidade.getCodigo() != null && !especialidade.getCodigo().isEmpty()) {
 
 				sbSql.append(" AND CODIGO = ? ");
-				parametro = especialidade.getCodigo();
-				parametros.add(parametro);
+				parametros.add(especialidade.getCodigo());
 
 			} else if (especialidade.getDescricao() != null) {
 
 				sbSql.append(" AND LOWER(DESCRICAO) LIKE ? ");
-				parametro = especialidade.getDescricao().toLowerCase();
-				parametros.add("%" + parametro + "%");
+				parametros.add("%" + especialidade.getDescricao().toLowerCase() + "%");
 			}
 
 			preparedStatement = Conexao.conexao.prepareStatement(sbSql.toString());
 
 			// carregar parametros de filtro do tipo String
-			for (int i = 1; i <= parametros.size(); i++) {
-				preparedStatement.setString(i, parametros.get(i - 1));
+			for (int i = 0; i <= parametros.size(); i++) {
+				preparedStatement.setString(i, parametros.get(0));
 			}
 
 			resultset = preparedStatement.executeQuery();

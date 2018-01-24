@@ -5,26 +5,26 @@ import java.util.List;
 import controle.ITransportador;
 import dao.Idao;
 import dao.implementacao.DaoMantenedor;
-import dominio.Entidade;
+import dominio.Mantenedor;
+import enuns.ESemafaro;
 
 public class VerificarCpfExistente implements IStrategy {
 
-	public String processar(Entidade entidade) {
-		
-		Idao dao = new DaoMantenedor();
-		List mans;
-		
-		mans = dao.listar(entidade);
-		if(mans.size() > 0){
-			return "CPF j? cadastrado! ";
-		}
-		return null;
-	}
-
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean processar(ITransportador transportador) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		Mantenedor mantenedor = (Mantenedor) transportador.getEntidade();
+		Idao dao = new DaoMantenedor();
+		List<Mantenedor> mans;
+		
+		mans = dao.listar(mantenedor);
+		if(mans.size() > 0){
+			transportador.setMensagens("CPF já cadastrado!");
+			return transportador.setSemafaro(ESemafaro.AMARELO);
+		}
+		
+		return true;
 	}
 
 

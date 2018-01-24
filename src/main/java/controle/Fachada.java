@@ -1,17 +1,21 @@
 package controle;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import dao.Idao;
-import dao.implementacao.*;
-import dominio.*;
-import enuns.ESemafaro;
-import negocio.*;
+import dao.implementacao.Conexao;
+import dao.implementacao.DaoEspecialidade;
+import dao.implementacao.DaoMantenedor;
+import dominio.Entidade;
+import dominio.Especialidade;
+import dominio.Mantenedor;
+import negocio.IStrategy;
 import negocio.mapadenegocio.IMapaDeNegocio;
 import negocio.mapadenegocio.MapaEspecialidade;
+import negocio.mapadenegocio.MapaMantenedor;
 
 public class Fachada implements IFachada {
 	
@@ -30,9 +34,11 @@ public class Fachada implements IFachada {
 		
 		// Carregar mapa de estratégias
 		this.mapaEstrategias.put(Especialidade.class.getName(),new MapaEspecialidade());
+		this.mapaEstrategias.put(Mantenedor.class.getName(),new MapaMantenedor());
 		
 		// Carregar mapa de DAO
 		this.mapaDao.put(Especialidade.class.getName(),new DaoEspecialidade());
+		this.mapaDao.put(Mantenedor.class.getName(),new DaoMantenedor());
 	}
 
 	@Override
@@ -101,11 +107,27 @@ public class Fachada implements IFachada {
 	
 	private void executarEstrategias(ITransportador transportador) {
 		
-		for(IStrategy st: this.estrategias){
+		Conexao.conectar();
+		
+		try {
 			
-			if(!st.processar(transportador)) {
-				return;
+			for(IStrategy st: this.estrategias){
+				
+				if(!st.processar(transportador)) {
+					Conexao.conexao.rollback();
+					return;
+				}
 			}
+		}catch(Exception e) {
+			try {
+				Conexao.conexao.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}finally {
+			Conexao.desconectar();
 		}
 	}
 }

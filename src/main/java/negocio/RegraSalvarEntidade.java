@@ -20,7 +20,7 @@ public class RegraSalvarEntidade implements IStrategy {
 		
 		TransportadorFachada transportadorFachada = (TransportadorFachada) transportador;
 		Entidade entidade = (Entidade) transportadorFachada.getEntidade();
-		Idao dao = (DaoEspecialidade) transportadorFachada.mapaObjetos().get("dao");
+		Idao dao = transportadorFachada.mapaObjetos().get("dao");
 		if(!dao.salvar(entidade)) {
 			transportadorFachada.setMensagens("Erro no salvar");
 			return transportador.setSemafaro(ESemafaro.VERMELHO);

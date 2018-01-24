@@ -26,7 +26,7 @@ public class RegraExcluirEntidade implements IStrategy {
 			return transportador.setSemafaro(ESemafaro.VERMELHO);
 		}
 		
-		Idao dao = (DaoEspecialidade) transportadorFachada.mapaObjetos().get("dao");
+		Idao dao = transportadorFachada.mapaObjetos().get("dao");
 		if(!dao.excluir(entidade)) {
 			transportador.setMensagens("Ocorreu um erro em excluir!");
 			return transportador.setSemafaro(ESemafaro.VERMELHO);

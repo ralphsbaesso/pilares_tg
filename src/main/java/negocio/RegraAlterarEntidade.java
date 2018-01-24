@@ -20,7 +20,7 @@ public class RegraAlterarEntidade implements IStrategy {
 			return transportador.setSemafaro(ESemafaro.VERMELHO);
 		}
 		
-		Idao dao = (DaoEspecialidade) transportadorFachada.mapaObjetos().get("dao");
+		Idao dao = transportadorFachada.mapaObjetos().get("dao");
 		if(!dao.alterar(entidade)) {
 			transportador.setMensagens("Ocorreu um erro em alterar!");
 			return transportador.setSemafaro(ESemafaro.VERMELHO);

@@ -1,6 +1,6 @@
 var retorno;
 
-class Mantendor{
+class Mantenedor{
 
 	salvar(mantenedor) {
 		
@@ -8,7 +8,7 @@ class Mantendor{
 		
 		$.ajax(
 				{
-					url : "Mantendor",
+					url : "Mantenedor",
 					type : 'post',
 					dataType : 'json',
 					data : {
@@ -37,7 +37,7 @@ class Mantendor{
 
 		$.ajax(
 				{
-					url : "Mantendor",
+					url : "Mantenedor",
 					type : 'post',
 					dataType : 'json',
 					data : {
@@ -67,7 +67,7 @@ class Mantendor{
 
 		$.ajax(
 				{
-					url : "Mantendor",
+					url : "Mantenedor",
 					type : 'post',
 					dataType : 'json',
 					data : {
@@ -96,7 +96,7 @@ class Mantendor{
 		
 		$.ajax(
 				{
-					url : "Mantendor",
+					url : "Mantenedor",
 					type : 'post',
 					dataType : 'json',
 					data : {

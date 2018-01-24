@@ -13,22 +13,31 @@ public class VerificarNomeNullo implements IStrategy {
 		
 		Entidade entidade = (Entidade) transportador.getEntidade();
 		
-		// verificar se eh uma instancia de Mantenedor
-		if(entidade instanceof Mantenedor){
-			Mantenedor man = (Mantenedor) entidade;
-			// verificar se o atributo nome est? vazio ou se ? null
-			if(man.getNome().equals("") || man.getNome().equals(null)){
-				transportador.setMensagens("É obrigatório o preenchimento do nome!!!");
-				return transportador.setSemafaro(ESemafaro.AMARELO);
+		try {
+			
+			// verificar se eh uma instancia de Mantenedor
+			if(entidade instanceof Mantenedor){
+				Mantenedor man = (Mantenedor) entidade;
+				// verificar se o atributo nome est? vazio ou se ? null
+				if(man.getNome().equals("")){
+					transportador.setMensagens("É obrigatório o preenchimento do nome!!!");
+					return transportador.setSemafaro(ESemafaro.AMARELO);
+				}
 			}
-		}
-		if(entidade instanceof Especialidade){
-			Especialidade esp = (Especialidade) entidade;
-			// verificar se o atributo nome est? vazio ou se ? null
-			if(esp.getDescricao().equals("") || esp.getDescricao().equals(null)){
-				transportador.setMensagens("É obrigatório o preenchimento da descrição");
-				return transportador.setSemafaro(ESemafaro.AMARELO);
+			if(entidade instanceof Especialidade){
+				Especialidade esp = (Especialidade) entidade;
+				// verificar se o atributo nome est? vazio ou se ? null
+				if(esp.getDescricao().equals("")){
+					transportador.setMensagens("É obrigatório o preenchimento da descrição");
+					return transportador.setSemafaro(ESemafaro.AMARELO);
+				}
 			}
+		}catch(NullPointerException e) {
+			System.err.println("Atributo = NULL");
+			return transportador.setSemafaro(ESemafaro.VERMELHO);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return transportador.setSemafaro(ESemafaro.VERMELHO);
 		}
 		
 		return true;

@@ -56,6 +56,7 @@
   <script src='js/componentes.js'></script>
   <script src='js/util.js'></script>
   <script src='js/Especialidade.js'></script>
+  <script src='js/Mantenedor.js'></script>
   <script src='js/menu-mantenedor.js'></script>
 </body>
 
