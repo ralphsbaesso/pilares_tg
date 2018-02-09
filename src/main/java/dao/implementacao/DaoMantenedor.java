@@ -159,9 +159,9 @@ public class DaoMantenedor implements Idao {
 		try {			
 			// Primeira op??o
 			// Buscar dados utilizando filtros
-			if(mantenedor.getCpf() != null  && mantenedor.getNome() != null){	// objeto n?o vazio?
+			if(mantenedor.getCpf() != null  || mantenedor.getNome() != null){	// objeto n?o vazio?
 				
-				if(!mantenedor.getCpf().equals("") && ! mantenedor.getNome().equals("")) {
+				if(!mantenedor.getCpf().equals("") || !mantenedor.getNome().equals("")) {
 					
 					// buscar uma entidade
 					mantenedores = listarUmaEntidade(mantenedor);
@@ -190,28 +190,29 @@ public class DaoMantenedor implements Idao {
 		List<Mantenedor> mantenedores = new ArrayList();
 		List<String> parametros = new ArrayList();
 		StringBuilder sbSql = new StringBuilder();
+		Mantenedor man = new Mantenedor();
 		
 		
 		try {
 			
 			sbSql.append("SELECT * FROM MANTENEDORES WHERE 1 = 1 ");
 			
-			if(mantenedor.getClass() != null && !mantenedor.getCpf().isEmpty()) {
+			if(mantenedor.getCpf() != null && !mantenedor.getCpf().isEmpty()) {
 				
 				sbSql.append(" AND cpf = ? ");
 				parametros.add(mantenedor.getCpf());
 				
 			} else if (mantenedor.getNome() != null) {
 
-				sbSql.append(" AND LOWER(DESCRICAO) LIKE ? ");
+				sbSql.append(" AND LOWER(nome) LIKE ? ");
 				parametros.add("%" + mantenedor.getNome().toLowerCase() + "%");
 			}
 			
 			preparedStatement = Conexao.conexao.prepareStatement(sbSql.toString());
 					
 			// carregar parametros de filtro do tipo String
-			for (int i = 0; i <= parametros.size(); i++) {
-				preparedStatement.setString(i, parametros.get(i));
+			for (int i = 0; i < parametros.size(); i++) {
+				preparedStatement.setString(i + 1, parametros.get(i));
 			}
 			
 			resultset = preparedStatement.executeQuery();
@@ -233,15 +234,62 @@ public class DaoMantenedor implements Idao {
 				
 				mantenedores.add(man);
 			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		// apenas um mantenedor? Buscar as especialidades.
+		if(mantenedores.size() == 1) {
+			
+			try{
+				
+				sbSql = new StringBuilder();
+				//buscar especialidades do mantenedor
+				sbSql.append("SELECT esp.* ")
+				.append("FROM mantenedores_especialidades me ")
+				.append("JOIN especialidades esp ")
+				.append("ON esp.id = me.especialidade_id ")
+				.append("JOIN mantenedores man ")
+				.append("ON man.id = me.mantenedor_id ")
+				.append("WHERE man.id = ?");
+				
+				preparedStatement = Conexao.conexao.prepareStatement(sbSql.toString());
+				preparedStatement.setInt(1, man.getId());
+				resultset = preparedStatement.executeQuery();
+				
+				Especialidade esp;
+				
+				while(resultset.next()){
+					
+					esp = new Especialidade();
+					esp.setId(resultset.getInt("id"));
+					esp.setDescricao(resultset.getString("descricao"));
+					esp.setCodigo(resultset.getString("codigo"));
+					try{
+						esp.getDataCadastro().setTime(resultset.getTimestamp("data_cadastro"));
+					}catch(java.lang.NullPointerException e){
+						System.out.println("erro");
+						esp.getDataCadastro().getInstance();
+					}
+					man.getEspecialidades().add(esp);
+				}
+				
+			}catch(Exception e){
+				System.out.println("erro de join");
+				e.printStackTrace();
+			}
+			
 		}
 		
 		
-		sql = "SELECT * "
-				+ "FROM mantenedores "
-				+ "WHERE cpf = ?";
-		
-		// retorno
-		return mantenedores = selectEntidade(mantenedor, sql);
+		return mantenedores;
 	}
 	
 	// listar todas as entidades
@@ -296,7 +344,7 @@ public class DaoMantenedor implements Idao {
 		}
 
 		// listando somente um mantenedor
-		if(mantenedores.size() == 1){
+		if(mantenedor != null && mantenedores.size() == 1){
 			try{
 				//buscar especialidades do mantenedor
 				String sql2 = "SELECT ESPECIALIDADES.id,"

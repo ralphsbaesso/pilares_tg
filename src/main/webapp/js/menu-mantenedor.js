@@ -67,19 +67,16 @@ $(document).ready(function(){
 		var linhaTR = $(this).parent().parent().parent();
 		var id = linhaTR.find("td").eq(0).html();
 		var nome = linhaTR.find("td").eq(1).html();
-		var registro = linhaTR.find("td").eq(2).html();
-		var email = linhaTR.find("td").eq(3).html();
-		var dataCadastro = linhaTR.find("td").eq(4).html();
+		var cpf = linhaTR.find("td").eq(2).html();
+		var registro = linhaTR.find("td").eq(3).html();
+		var email = linhaTR.find("td").eq(4).html();
+		var dataCadastro = linhaTR.find("td").eq(5).html();
 		
 		mantenedor = new Object();
 		
-		mantenedor.id = id;
-		mantenedor.nome = nome;
-		mantenedor.registro = registro;
-		mantenedor.email = email;
-		mantenedor.dataCadastro = dataCadastro;
+		mantenedor.cpf = cpf;
 		
-		$('#divBody').html(montarAlterarExcluir.call(this, mantenedor));
+		listar(mantenedor);
 	
 	});
 	
@@ -131,7 +128,7 @@ $(document).ready(function(){
     		
 	    	 var msgRetorno;
 	    	 
-	    	 if(mantenedors.length == 1){
+	    	 if(mantenedors.length == 1 && mantenedors[0].especialidades.length > 0){
 	    		 msgRetorno = montarAlterarExcluir.call(this, mantenedors[0]);
 	    	 }else{
 	    		 
@@ -145,6 +142,7 @@ $(document).ready(function(){
 	    					 makeTableTR(
 	    							 makeTableTD(mantenedor.id) +
 	    							 makeTableTD(mantenedor.nome) +
+	    							 makeTableTD(mantenedor.cpf) +
 	    							 makeTableTD(mantenedor.registro) +
 	    							 makeTableTD(mantenedor.email) +
 	    							 makeTableTD(formatarData(mantenedor.dataCadastro))+
@@ -158,13 +156,14 @@ $(document).ready(function(){
 	    						 makeTableTR(
 	    								 makeTableTD('ID') +
 	    								 makeTableTD('Nome') +
+	    								 makeTableTD('CPF') +
 	    								 makeTableTD('Registro') +
 	    								 makeTableTD('Email') +
 	    								 makeTableTD('Data Cadastro') 
 	    						 )
 	    				 ) + 
 	    				 tBody +
-	    				 makeTableTFoot("Quantidade de Especialidades cadastradas: " + mantenedors.length, mantenedors.length)
+	    				 makeTableTFoot("Quantidade de Especialidades cadastradas: " + mantenedors.length, 7)
 	    		 );
 	    		 
 	    		 msgRetorno = table;
@@ -310,7 +309,7 @@ $(document).ready(function(){
 			
 			var especialidades = new Array();
 			
-			var selects = $("select[name = txtSelectEspecialidadeId]");
+			var selects = $('select[name="selectEspecialidade"]');
 			
 			for(var i = 0; i < selects.length; i++){
 				var especialidade = new Object();
@@ -320,6 +319,8 @@ $(document).ready(function(){
 				especialidades.push(especialidade);
 			}
 		}
+		
+		mantenedor.especialidades = especialidades;
 		
 		var objMantenedor = new Mantenedor();
 		var json = objMantenedor.alterar(mantenedor);
@@ -418,6 +419,43 @@ $(document).ready(function(){
 	
 	function montarAlterarExcluir(mantenedor){
 		
+		var select = montarSelectEspecialidades();
+		
+		var liEspecialidades = "";
+		
+		var esps = mantenedor.especialidades;
+		
+		for(var i = 0; i < esps.length; i++){
+			
+			options = select.find("option");
+			
+			for(var j = 0; j < options.length; j++){
+				
+				if(options.eq(j).val() == esps[i].id){
+					options.eq(j).attr("selected", true);
+				}else{
+					options.eq(j).attr("selected", false);
+				}
+			}
+			
+			var selected = select.clone();
+			var div = $("<div>").append(selected.attr("id", "selectEspecialidade").attr("class", "form-control").attr('name', 'selectEspecialidade'));
+			
+			var button = "";
+			
+			if(i === 0){
+				button = "<button type='button' class='form-control' id='operacao' value='adicionarEspecialidade'>Adicionar Especialidade</button>";
+			}else{
+				button = "<button type='button' id='operacao' class='form-control btn-default' name='txtSelectEspecialidadeId' value='deleteEspecialidade'>Remover Especialidade</button>"
+			}
+			
+			liEspecialidades +=
+				"<li class='list-group-item form-inline'>" +
+				"<label class='form-control bg-secondary text-white' id='' name='txtEspecialidadeId'>Especialidade</label>" +
+				div.html() + "&nbsp;" + button + "</li>";
+		}
+		
+		
 		return "<div class='py-5'>" +
 		"<div class='container'>" +
 		"<div class='row'>" +
@@ -433,6 +471,7 @@ $(document).ready(function(){
 		"<input class='form-control' type='text' name='txtNome' value='" + mantenedor.nome + "'> </li>" +
 		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' name='lblDetalhamento'>Email</label>" +
 		"<input class='form-control w-75' type='text' name='txtEmail' value='" + mantenedor.email + "'> </li>" +
+			liEspecialidades +
 		"<li class='list-group-item form-inline'>" +
 		"<button class='btn btn-outline-warning form-control' name='operacao' id='operacao' value='alterar' style='width:49%'>Alterar</button>" +
 		"<button class='btn btn-outline-danger form-control' name='operacao' id='operacao' value='excluir' style='width:49%'>Excluir</button>" +
@@ -630,6 +669,8 @@ $(document).ready(function(){
 		});
 		
 		$("#selectEspecialidade").html("").append(options);
+		
+		return $("<select>").append(options);
 	}
 	
 }); // (document).ready
