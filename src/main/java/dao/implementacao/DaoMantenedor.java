@@ -150,6 +150,7 @@ public class DaoMantenedor implements Idao {
 		return true;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List listar(Entidade entidade) {
 		
@@ -308,7 +309,7 @@ public class DaoMantenedor implements Idao {
 	// loop de select no banco
 	private List selectEntidade(Mantenedor mantenedor, String sql){
 		
-		Mantenedor man;
+		Mantenedor man = null;
 		List<Mantenedor> mantenedores = new ArrayList();
 		
 		try {
@@ -347,18 +348,18 @@ public class DaoMantenedor implements Idao {
 		if(mantenedor != null && mantenedores.size() == 1){
 			try{
 				//buscar especialidades do mantenedor
-				String sql2 = "SELECT ESPECIALIDADES.id,"
-						  + "ESPECIALIDADES.descricao," 
-						  + "ESPECIALIDADES.data_cadastro," 
-						  + "ESPECIALIDADES.codigo " 
-						  + "from MANTENEDORES_ESPECIALIDADES join ESPECIALIDADES "
-						  + "on(ESPECIALIDADES.ID = MANTENEDORES_ESPECIALIDADES.especialidade_id) "
-						  + " join mantenedores"
-						  + " on (MANTENEDORES.ID = MANTENEDORES_ESPECIALIDADES.mantenedor_id)"
-						  + " where cpf = ?";
+				String sql2 = "SELECT especialidades.id,"
+						  + "especialidades.descricao," 
+						  + "especialidades.data_cadastro," 
+						  + "especialidades.codigo " 
+						  + "FROM mantenedores_especialidades join especialidades "
+						  + "ON (especialidades.id = mantenedores_especialidades.especialidade_id) "
+						  + " JOIN mantenedores"
+						  + " ON (mantenedores.id = mantenedores_especialidades.mantenedor_id)"
+						  + " WHERE mantenedores.id = ?";
 				
 				preparedStatement = Conexao.conexao.prepareStatement(sql2);
-				preparedStatement.setString(1, mantenedor.getCpf());
+				preparedStatement.setInt(1, man.getId());
 				resultset = preparedStatement.executeQuery();
 				
 				Especialidade esp;
@@ -375,7 +376,7 @@ public class DaoMantenedor implements Idao {
 						System.out.println("erro");
 						esp.getDataCadastro().getInstance();
 					}
-					mantenedores.get(0).getEspecialidades().add(esp);
+					man.getEspecialidades().add(esp);
 				}
 				
 			}catch(Exception e){

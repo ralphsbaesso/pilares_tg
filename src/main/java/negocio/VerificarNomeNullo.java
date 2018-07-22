@@ -1,6 +1,7 @@
 package negocio;
 
 import controle.ITransportador;
+import dominio.CentroCusto;
 import dominio.Entidade;
 import dominio.Especialidade;
 import dominio.Mantenedor;
@@ -23,17 +24,24 @@ public class VerificarNomeNullo implements IStrategy {
 					transportador.setMensagens("É obrigatório o preenchimento do nome!!!");
 					return transportador.setSemafaro(ESemafaro.AMARELO);
 				}
-			}
-			if(entidade instanceof Especialidade){
+			}else if(entidade instanceof Especialidade){
 				Especialidade esp = (Especialidade) entidade;
 				// verificar se o atributo nome est? vazio ou se ? null
 				if(esp.getDescricao().equals("")){
 					transportador.setMensagens("É obrigatório o preenchimento da descrição");
 					return transportador.setSemafaro(ESemafaro.AMARELO);
 				}
+			}else if(entidade instanceof CentroCusto){
+				CentroCusto cc = (CentroCusto) entidade;
+				// verificar se o atributo nome est? vazio ou se ? null
+				if(cc.getDescricao().equals("")){
+					transportador.setMensagens("É obrigatório o preenchimento da descrição");
+					return transportador.setSemafaro(ESemafaro.AMARELO);
+				}
 			}
 		}catch(NullPointerException e) {
 			System.err.println("Atributo = NULL");
+			transportador.setMensagens("Erro desconhecido");
 			return transportador.setSemafaro(ESemafaro.VERMELHO);
 		}catch(Exception e) {
 			e.printStackTrace();

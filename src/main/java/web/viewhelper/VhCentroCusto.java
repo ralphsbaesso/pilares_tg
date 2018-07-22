@@ -12,34 +12,33 @@ import com.google.gson.Gson;
 
 import adaptergson.FactoryGson;
 import controle.ITransportador;
-import dominio.OrdemDeServico;
+import dominio.CentroCusto;
 import dominio.Entidade;
-import dominio.OrdemDeServico;
 import enuns.EOperacao;
 import web.TransportadorWeb;
 
-public class VhOrdemDeServico extends AbstractVH {
+public class VhCentroCusto extends AbstractVH {
 
-	private OrdemDeServico om;
+	private CentroCusto centroCusto;
 
 	@Override
 	public Entidade getEntidade(HttpServletRequest request) {
 
 		Gson gson = FactoryGson.getGson();
 
-		this.om = new OrdemDeServico();
+		this.centroCusto = new CentroCusto();
 
 		String jsonRequisicao = request.getParameter("requisicao");
 		requisicao = gson.fromJson(jsonRequisicao, Requisicao.class);
 
-		String jsonOrdemDeServico = request.getParameter("om");
+		String jsonCentroCusto = request.getParameter("entidade");
 
-		if (jsonOrdemDeServico != null) {
+		if (jsonCentroCusto != null) {
 
 			try {
-				this.om = gson.fromJson(jsonOrdemDeServico, OrdemDeServico.class);
+				this.centroCusto = gson.fromJson(jsonCentroCusto, CentroCusto.class);
 			} catch (Exception e) {
-				this.om = null;
+				this.centroCusto = null;
 				e.printStackTrace();
 			}
 		}
@@ -54,7 +53,7 @@ public class VhOrdemDeServico extends AbstractVH {
 
 		}
 
-		return this.om;
+		return this.centroCusto;
 	}
 
 	@Override
@@ -62,7 +61,8 @@ public class VhOrdemDeServico extends AbstractVH {
 			throws IOException, ServletException {
 
 		PrintWriter out = response.getWriter();
-		TransportadorWeb transpotadorWeb = new TransportadorWeb();
+		TransportadorWeb transportadorWeb = new TransportadorWeb();
+		transportadorWeb.recebeObjetoMensagem(transportador);
 
 		Gson json = new Gson();
 
@@ -78,12 +78,12 @@ public class VhOrdemDeServico extends AbstractVH {
 
 		if (this.requisicao.getDestino() != null) {
 
-			request.setAttribute("om", json.toJson(transportador.getEntidades().get(0)));
+			request.setAttribute("centroCusto", json.toJson(transportador.getEntidades().get(0)));
 			RequestDispatcher rd = request.getRequestDispatcher(this.requisicao.getDestino());
 			rd.forward(request, response);
 			return;
 		}
 
-		out.print(transpotadorWeb.enviarObjetoWeb());
+		out.print(transportadorWeb.enviarObjetoWeb());
 	}
 }

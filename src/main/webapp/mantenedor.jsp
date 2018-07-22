@@ -55,9 +55,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
   <script src='js/componentes.js'></script>
   <script src='js/util.js'></script>
-  <script src='js/Especialidade.js'></script>
-  <script src='js/Mantenedor.js'></script>
-  <script src='js/menu-mantenedor.js'></script>
+  <script src='js/mantenedor.js'></script>
+  <script src='js/requisicao.js'></script>
 </body>
 
 </html>

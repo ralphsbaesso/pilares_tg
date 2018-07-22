@@ -9,9 +9,9 @@ public class Conexao {
 //	static private final String url = "jdbc:oracle:thin:@localhost:1521:XE";
 //	static private final String usuario = "Pilares_tg";
 //	static private final String senha = "123";
-	static private final String url = "jdbc:mysql://127.0.0.1:3306/pilares_tg";
-	static private final String usuario = "pilares_tg";
-	static private final String senha = "";
+	static private final String url = "jdbc:mysql://127.0.0.1:3306/pilares";
+	static private final String usuario = "pilares";
+	static private final String senha = "123";
     static public Connection conexao;
 	
 	static public void conectar(){

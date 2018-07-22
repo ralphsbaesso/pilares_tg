@@ -46,7 +46,7 @@
   
   <servlet-mapping>
     <servlet-name>Servlet</servlet-name>
-    <url-pattern>/Analise</url-pattern>
+    <url-pattern>/CentroCusto</url-pattern>
   </servlet-mapping>
   
   	<error-page>

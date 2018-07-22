@@ -34,10 +34,7 @@ public class InserirCodigo implements IStrategy {
 				}
 			}
 			return true;
-		}
-
-		// tarefa
-		if (entidade instanceof Tarefa) {
+		}else if (entidade instanceof Tarefa) {
 			Tarefa tarefa = (Tarefa) entidade;
 			if (tarefa.getApontamentos().size() > 0) {
 				for (Apontamento ap : tarefa.getApontamentos()) {
@@ -50,22 +47,20 @@ public class InserirCodigo implements IStrategy {
 				}
 			}
 			return true;
-		}
-
-		// especialidade
-		if (entidade instanceof Especialidade) {
+		}else if (entidade instanceof Especialidade) {
 			Especialidade especialidade = (Especialidade) entidade;
 			especialidade.setCodigo(gerarCodigo(entidade));
 			return true;
-		}
-
-		// mantenedor
-		if (entidade instanceof Mantenedor) {
+		}else if (entidade instanceof Mantenedor) {
 			Mantenedor mantenedor = (Mantenedor) entidade;
 			mantenedor.setRegistro(gerarCodigo(entidade));
 			return true;
+		}else if(entidade instanceof CentroCusto) {
+			CentroCusto cc = (CentroCusto) entidade;
+			cc.setCodigo(gerarCodigo(entidade));
+			return true;
 		}
-
+		
 		transportador.setMensagens("Erro na inserção do código");
 		return transportador.setSemafaro(ESemafaro.AMARELO);
 	}

@@ -1,8 +1,3 @@
-/**
- * 
- * @returns
- */
-
 $(document).ready(function(){
 	
 	carregarEspecialidades();
@@ -112,8 +107,8 @@ $(document).ready(function(){
 			mantenedor.cpf = $("[name = txtCpf]").val();
 		}
 		
-		var objMantenedor = new Mantenedor();
-		var json = objMantenedor.listar(mantenedor);
+		var requisicao = {operacao: 'LISTAR'};
+		var json = requisicaoAjax(mantenedor, requisicao, 'Mantenedor');
 		
 		var mantenedor = json.entidade;
 		var mantenedors = json.entidades;
@@ -213,9 +208,8 @@ $(document).ready(function(){
 		
 		mantenedor.especialidades = especialidades;
 		
-		var objMantenedor = new Mantenedor();
-		
-		var json = objMantenedor.salvar(mantenedor);
+		var requisicao = {operacao : "SALVAR"}
+		var json = requisicaoAjax(mantenedor, requisicao, "Mantenedor");
 
 		var mantenedor = json.entidade;
 		var mantenedors = json.entidades;
@@ -262,7 +256,8 @@ $(document).ready(function(){
 			mantenedor.detalhamento = $("[name = txtDetalhamento]").val();
 		}
 		
-		var objMantenedor = new Mantenedor();
+		var requisicao = {operacao: 'EXCLUIR'};
+		var json = requisicaoAjax(mantenedor, requisicao, 'Mantenedor');
 		
 		var json = objMantenedor.excluir(mantenedor);
 	    	 
@@ -322,8 +317,8 @@ $(document).ready(function(){
 		
 		mantenedor.especialidades = especialidades;
 		
-		var objMantenedor = new Mantenedor();
-		var json = objMantenedor.alterar(mantenedor);
+		var requisicao = {operacao: 'ALTERAR'};
+		var json = requisicaoAjax(mantenedor, requisicao, 'Mantenedor');
 		
 		var mantenedor = json.entidade;
 		var mantenedors = json.entidades;
@@ -399,7 +394,7 @@ $(document).ready(function(){
 				"<ul class='list-group'>" +
 				"<li class='list-group-item form-inline'>" +
 				"<label class='form-control bg-secondary text-white'>Registro</label>" +
-				"<input class='form-control' type='text' placeholder='NÃO IMPLEMENTADO!' id='txtRegistro' name='txtRegistro'></li>" +
+				"<input class='form-control' type='text' placeholder='Digire aqui..' id='txtRegistro' name='txtRegistro'></li>" +
 				"<li class='list-group-item form-inline'>" +
 				"<label class='form-control bg-secondary text-white'>CPF</label>" +
 				"<input class='form-control' type='text' placeholder='Digite aqui..' id='txtCpf' name='txtCpf'></li>" +
@@ -638,8 +633,8 @@ $(document).ready(function(){
 	
 	function carregarEspecialidades(){
 		
-		var objEspecialidade = new Especialidade();
-		var obj = objEspecialidade.listar();
+		var requisicao = {operacao : 'LISTAR'};
+		var obj = requisicaoAjax({}, requisicao, 'Especialidade');
 		
 		var especialidades = obj.entidades;
 		

@@ -3,14 +3,16 @@ package web.viewhelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+import adaptergson.FactoryGson;
 import controle.ITransportador;
-
+import dominio.Especialidade;
 import dominio.Entidade;
 import dominio.Especialidade;
 import enuns.EOperacao;
@@ -23,27 +25,36 @@ public class VhEspecialidade extends AbstractVH {
 	@Override
 	public Entidade getEntidade(HttpServletRequest request) {
 
-		Gson gson = new Gson();
-		especialidade = new Especialidade();
-		String jsonEspecialidade = request.getParameter("especialidade");
-		
-		if(jsonEspecialidade != null) {
-			this.especialidade = gson.fromJson(jsonEspecialidade, Especialidade.class);			
+		Gson gson = FactoryGson.getGson();
+
+		this.especialidade = new Especialidade();
+
+		String jsonRequisicao = request.getParameter("requisicao");
+		requisicao = gson.fromJson(jsonRequisicao, Requisicao.class);
+
+		String jsonEspecialidade = request.getParameter("entidade");
+
+		if (jsonEspecialidade != null) {
+
+			try {
+				this.especialidade = gson.fromJson(jsonEspecialidade, Especialidade.class);
+			} catch (Exception e) {
+				this.especialidade = null;
+				e.printStackTrace();
+			}
 		}
 
-		operacao = request.getParameter("operacao").toLowerCase();
+		if (requisicao.getOperacao().equals(EOperacao.SALVAR)) {
 
-		if (operacao.equals(EOperacao.SALVAR.getValor())) {
-			
-		}else if( operacao.equals(EOperacao.ALTERAR.getValor())) {
-			
-		}else if(operacao.equals(EOperacao.EXCLUIR.getValor())) {
-		
-			
+		} else if (requisicao.getOperacao().equals(EOperacao.ALTERAR)) {
+
+		} else if (requisicao.getOperacao().equals(EOperacao.EXCLUIR)) {
+
+		} else if (requisicao.getOperacao().equals(EOperacao.LISTAR)) {
+
 		}
 
-		return especialidade;
-
+		return this.especialidade;
 	}
 
 	@Override
@@ -51,33 +62,29 @@ public class VhEspecialidade extends AbstractVH {
 			throws IOException, ServletException {
 
 		PrintWriter out = response.getWriter();
-		TransportadorWeb transpotadorWeb = new TransportadorWeb();
+		TransportadorWeb transportadorWeb = new TransportadorWeb();
+		transportadorWeb.recebeObjetoMensagem(transportador);
 
-		Especialidade esp = (Especialidade) this.entidade;
-		transpotadorWeb.recebeObjetoMensagem(transportador);
+		Gson json = new Gson();
 
-		if (operacao.equals("salvar")) {
+		if (requisicao.getOperacao().equals(EOperacao.SALVAR)) {
 
-			out.print(transpotadorWeb.enviarObjetoWeb());
-			return;
+		} else if (requisicao.getOperacao().equals(EOperacao.ALTERAR)) {
 
-		} else if (operacao.equals("excluir")) {
+		} else if (requisicao.getOperacao().equals(EOperacao.EXCLUIR)) {
 
-			out.print(transpotadorWeb.enviarObjetoWeb());
-			return;
-			
-		} else if (operacao.equals("alterar")) {
+		} else if (requisicao.getOperacao().equals(EOperacao.LISTAR)) {
 
-			out.print(transpotadorWeb.enviarObjetoWeb());
-			return;
-			
-		} else if (operacao.equals("listar")) {
+		}
 
-			out.print(transpotadorWeb.enviarObjetoWeb());
+		if (this.requisicao.getDestino() != null) {
+
+			request.setAttribute("especialidade", json.toJson(transportador.getEntidades().get(0)));
+			RequestDispatcher rd = request.getRequestDispatcher(this.requisicao.getDestino());
+			rd.forward(request, response);
 			return;
 		}
 
-		out.println("operacao: " + operacao);
-		// rd.forward(request, response);
+		out.print(transportadorWeb.enviarObjetoWeb());
 	}
 }

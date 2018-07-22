@@ -71,7 +71,7 @@
 				<configuration>
 					<verbose>true</verbose>
 					<fork>true</fork>
-					<executable>C:\Program Files\Java\jdk1.8.0_152\bin\javac.exe</executable>
+					<executable>C:\Program Files\Java\jdk1.8.0_151\bin\javac.exe</executable>
 					<compilerVersion>1.8</compilerVersion>
 					<source>1.8</source>
 					<target>1.8</target>

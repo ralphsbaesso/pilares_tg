@@ -8,32 +8,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.Idao;
+import dominio.CentroCusto;
 import dominio.Entidade;
-import dominio.Especialidade;
 
-public class DaoEspecialidade implements Idao {
+public class DaoCentroCusto implements Idao {
 
 	// objetos para coneccao
 	private String sql;
-	private String msg;
 	private PreparedStatement preparedStatement;
 	private ResultSet resultset;
 
 	@Override
 	public boolean salvar(Entidade entidade) {
 
-		Especialidade especialidade = (Especialidade) entidade;
+		CentroCusto centroCusto = (CentroCusto) entidade;
 
 		Conexao.conectar();
 
-		sql = "INSERT INTO ESPECIALIDADES" + " (descricao,data_cadastro, codigo, detalhamento)" + " VALUES (?,?,?,?)";
+		sql = "INSERT INTO centros_de_custos (descricao, data_cadastro, codigo, detalhamento) VALUES (?, ?, ?, ?)";
 
 		try {
 			preparedStatement = Conexao.conexao.prepareStatement(sql);
-			preparedStatement.setString(1, especialidade.getDescricao());
-			preparedStatement.setDate(2, new Date(especialidade.getDataCadastro().getTimeInMillis()));
-			preparedStatement.setString(3, especialidade.getCodigo());
-			preparedStatement.setString(4, especialidade.getDetalhamento());
+			preparedStatement.setString(1, centroCusto.getDescricao());
+			preparedStatement.setDate(2, new Date(centroCusto.getDataCadastro().getTimeInMillis()));
+			preparedStatement.setString(3, centroCusto.getCodigo());
+			preparedStatement.setString(4, centroCusto.getDetalhamento());
 			preparedStatement.execute();
 			preparedStatement.close();
 		} catch (SQLException ex) {
@@ -47,17 +46,17 @@ public class DaoEspecialidade implements Idao {
 
 	@Override
 	public boolean alterar(Entidade entidade) {
-		Especialidade especialidade = (Especialidade) entidade;
+		CentroCusto centroCusto = (CentroCusto) entidade;
 
 		Conexao.conectar();
 
-		sql = "UPDATE ESPECIALIDADES" + " SET descricao = ?, " + " detalhamento = ? " + " WHERE id = ?";
+		sql = "UPDATE centros_de_custos SET descricao = ?, detalhamento = ? WHERE id = ?";
 
 		try {
 			preparedStatement = Conexao.conexao.prepareStatement(sql);
-			preparedStatement.setString(1, especialidade.getDescricao());
-			preparedStatement.setString(2, especialidade.getDetalhamento());
-			preparedStatement.setInt(3, especialidade.getId());
+			preparedStatement.setString(1, centroCusto.getDescricao());
+			preparedStatement.setString(2, centroCusto.getDetalhamento());
+			preparedStatement.setInt(3, centroCusto.getId());
 			preparedStatement.execute();
 			preparedStatement.close();
 		} catch (SQLException ex) {
@@ -73,15 +72,15 @@ public class DaoEspecialidade implements Idao {
 	@Override
 	public boolean excluir(Entidade entidade) {
 
-		Especialidade especialidade = (Especialidade) entidade;
+		CentroCusto centroCusto = (CentroCusto) entidade;
 
 		Conexao.conectar();
 
-		sql = "DELETE FROM ESPECIALIDADES " + "WHERE  id = (?)";
+		sql = "DELETE FROM centros_de_custos WHERE  id = (?)";
 
 		try {
 			preparedStatement = Conexao.conexao.prepareStatement(sql);
-			preparedStatement.setInt(1, especialidade.getId());
+			preparedStatement.setInt(1, centroCusto.getId());
 			preparedStatement.execute();
 			preparedStatement.close();
 		} catch (SQLException ex) {
@@ -97,24 +96,24 @@ public class DaoEspecialidade implements Idao {
 	@Override
 	public List listar(Entidade entidade) {
 
-		List<Especialidade> especialidades = new ArrayList();
-		Especialidade especialidade = (Especialidade) entidade;
+		List<CentroCusto> centroCustos = new ArrayList();
+		CentroCusto centroCusto = (CentroCusto) entidade;
 
 		try {
 			Conexao.conectar();
 
 			// Primeira opção
 			// Buscar dados utilizando filtro 'codigo'
-			if (especialidade.getCodigo() != null || especialidade.getDescricao() != null) { // objeto n�o vazio?
+			if (centroCusto.getCodigo() != null || centroCusto.getDescricao() != null) { // objeto n�o vazio?
 
 				// buscar uma entidade
-				especialidades = listarEntidadePorFiltro(especialidade);
+				centroCustos = listarEntidadePorFiltro(centroCusto);
 
 			} else {
 				// Segundo op��o
 				// Buscar todos os dados da tabela
 
-				especialidades = listarTodasEntidades();
+				centroCustos = listarTodasEntidades();
 			}
 
 			// fechar o PreparedStatement
@@ -127,17 +126,17 @@ public class DaoEspecialidade implements Idao {
 
 		Conexao.desconectar();
 
-		return especialidades;
+		return centroCustos;
 	}
 
 	// *****************//
 	// metodos privados
 
 	@SuppressWarnings({ "static-access", "rawtypes", "unchecked" })
-	private List listarEntidadePorFiltro(Especialidade especialidade) {
+	private List listarEntidadePorFiltro(CentroCusto centroCusto) {
 
-		List<Especialidade> especialidades = new ArrayList();
-		Especialidade esp;
+		List<CentroCusto> centroCustos = new ArrayList();
+		CentroCusto cc;
 
 		List<String> parametros = new ArrayList();
 
@@ -145,17 +144,17 @@ public class DaoEspecialidade implements Idao {
 
 		try {
 
-			sbSql.append("SELECT * FROM ESPECIALIDADES WHERE 1 = 1 ");
+			sbSql.append("SELECT * FROM centros_de_custos WHERE 1 = 1 ");
 
-			if (especialidade.getCodigo() != null && !especialidade.getCodigo().isEmpty()) {
+			if (centroCusto.getCodigo() != null && !centroCusto.getCodigo().isEmpty()) {
 
 				sbSql.append(" AND CODIGO = ? ");
-				parametros.add(especialidade.getCodigo());
+				parametros.add(centroCusto.getCodigo());
 
-			} else if (especialidade.getDescricao() != null) {
+			} else if (centroCusto.getDescricao() != null) {
 
 				sbSql.append(" AND LOWER(DESCRICAO) LIKE ? ");
-				parametros.add("%" + especialidade.getDescricao().toLowerCase() + "%");
+				parametros.add("%" + centroCusto.getDescricao().toLowerCase() + "%");
 			}
 
 			preparedStatement = Conexao.conexao.prepareStatement(sbSql.toString());
@@ -168,18 +167,18 @@ public class DaoEspecialidade implements Idao {
 			resultset = preparedStatement.executeQuery();
 
 			while (resultset.next()) {
-				esp = new Especialidade();
-				esp.setId(resultset.getInt("id"));
-				esp.setDescricao(resultset.getString("descricao"));
-				esp.setCodigo(resultset.getString("codigo"));
-				esp.setDetalhamento(resultset.getString("detalhamento"));
+				cc = new CentroCusto();
+				cc.setId(resultset.getInt("id"));
+				cc.setDescricao(resultset.getString("descricao"));
+				cc.setCodigo(resultset.getString("codigo"));
+				cc.setDetalhamento(resultset.getString("detalhamento"));
 				try {
-					esp.getDataCadastro().setTime(resultset.getTimestamp("data_cadastro"));
+					cc.getDataCadastro().setTime(resultset.getTimestamp("data_cadastro"));
 				} catch (java.lang.NullPointerException e) {
-					esp.getDataCadastro().getInstance();
+					cc.getDataCadastro().getInstance();
 				}
 
-				especialidades.add(esp);
+				centroCustos.add(cc);
 			}
 
 		} catch (SQLException e) {
@@ -187,52 +186,52 @@ public class DaoEspecialidade implements Idao {
 		}
 
 		// retorno
-		return especialidades;
+		return centroCustos;
 	}
 
 	// listar todas as entidades
 	private List listarTodasEntidades() {
 
-		List<Especialidade> especialidades = new ArrayList();
-		Especialidade esp;
+		List<CentroCusto> centroCustos = new ArrayList();
+		CentroCusto cc;
 
-		sql = "SELECT * " + "FROM ESPECIALIDADES " + "ORDER BY descricao ASC";
+		sql = "SELECT * FROM centros_de_custos ORDER BY descricao ASC";
 
 		// retorno
-		return especialidades = selectEntidade(null, sql);
+		return centroCustos = selectEntidade(null, sql);
 	}
 
 	// loop de select no banco
-	private List selectEntidade(Especialidade especialidade, String sql) {
+	private List selectEntidade(CentroCusto centroCusto, String sql) {
 
-		Especialidade esp;
-		List<Especialidade> especialidades = new ArrayList();
+		CentroCusto cc;
+		List<CentroCusto> centroCustos = new ArrayList();
 
 		try {
 			preparedStatement = Conexao.conexao.prepareStatement(sql);
-			if (especialidade != null)
-				preparedStatement.setString(1, especialidade.getCodigo());
+			if (centroCusto != null)
+				preparedStatement.setString(1, centroCusto.getCodigo());
 			resultset = preparedStatement.executeQuery();
 
 			while (resultset.next()) {
-				esp = new Especialidade();
-				esp.setId(resultset.getInt("id"));
-				esp.setDescricao(resultset.getString("descricao"));
-				esp.setCodigo(resultset.getString("codigo"));
-				esp.setDetalhamento(resultset.getString("detalhamento"));
+				cc = new CentroCusto();
+				cc.setId(resultset.getInt("id"));
+				cc.setDescricao(resultset.getString("descricao"));
+				cc.setCodigo(resultset.getString("codigo"));
+				cc.setDetalhamento(resultset.getString("detalhamento"));
 				try {
-					esp.getDataCadastro().setTime(resultset.getTimestamp("data_cadastro"));
+					cc.getDataCadastro().setTime(resultset.getTimestamp("data_cadastro"));
 				} catch (java.lang.NullPointerException e) {
-					esp.getDataCadastro().getInstance();
+					cc.getDataCadastro().getInstance();
 				}
 
-				especialidades.add(esp);
+				centroCustos.add(cc);
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return especialidades;
+		return centroCustos;
 	}
 }

@@ -64,15 +64,15 @@ $(document).ready(function(){
 		var detalhamento = linhaTR.find("td").eq(3).html();
 		var dataCadastro = linhaTR.find("td").eq(4).html();
 		
-		especialidade = new Object();
+		centroCusto = new Object();
 		
-		especialidade.id = id;
-		especialidade.codigo = codigo;
-		especialidade.descricao = descricao;
-		especialidade.detalhamento = detalhamento;
-		especialidade.dataCadastro = dataCadastro;
+		centroCusto.id = id;
+		centroCusto.codigo = codigo;
+		centroCusto.descricao = descricao;
+		centroCusto.detalhamento = detalhamento;
+		centroCusto.dataCadastro = dataCadastro;
 		
-		$('#divBody').html(montarAlterarExcluir.call(this, especialidade));
+		$('#divBody').html(montarAlterarExcluir.call(this, centroCusto));
 	
 	});
 	
@@ -86,32 +86,32 @@ $(document).ready(function(){
 		var detalhamento = linhaTR.find("td").eq(3).html();
 		var dataCadastro = linhaTR.find("td").eq(4).html();
 		
-		especialidade = new Object();
+		centroCusto = new Object();
 		
-		especialidade.id = id;
-		especialidade.codigo = codigo;
-		especialidade.descricao = descricao;
-		especialidade.detalhamento = detalhamento;
+		centroCusto.id = id;
+		centroCusto.codigo = codigo;
+		centroCusto.descricao = descricao;
+		centroCusto.detalhamento = detalhamento;
 		
-		excluir(especialidade);
+		excluir(centroCusto);
 	});
 
 /* FUNÇÕES CHAMADAS AJAX */
 	
-	function listar(especialidade){
+	function listar(centroCusto){
 		
-		if(especialidade == null){
-			var especialidade = new Object();
+		if(centroCusto == null){
+			var centroCusto = new Object();
 			
-			especialidade.codigo = $("[name = txtCodigo]").val();
-			especialidade.descricao = $("[name = txtDescricao]").val();
-			especialidade.detalhamento = $("[name = txtDetalhamento]").val();
+			centroCusto.codigo = $("[name = txtCodigo]").val();
+			centroCusto.descricao = $("[name = txtDescricao]").val();
+			centroCusto.detalhamento = $("[name = txtDetalhamento]").val();
 		}
 		
-		var objEspecialidade = new Especialidade();
-		var json = objEspecialidade.listar(especialidade);
+		var requisicao = {operacao: 'LISTAR'};
+		var json = requisicaoAjax(centroCusto, requisicao, 'CentroCusto');
 		
-		var especialidade = json.entidade;
+		var centroCusto = json.entidade;
 		var especialidades = json.entidades;
 		var mensagens = json.mensagens;
 		var semafaro = json.semafaro;
@@ -132,16 +132,16 @@ $(document).ready(function(){
 	    		 
 	    		 for(var i = 0; i < especialidades.length; i++){
 	    			 
-	    			 especialidade = especialidades[i];
+	    			 centroCusto = especialidades[i];
 	    			 
 	    			 tBody += makeTableTBody(
 	    					 makeTableTR(
-	    							 makeTableTD(especialidade.id) +
-	    							 makeTableTD(especialidade.codigo) +
-	    							 makeTableTD(especialidade.descricao) +
-	    							 makeTableTD(especialidade.detalhamento) +
-	    							 makeTableTD(formatarData(especialidade.dataCadastro))+
-	    							 makeTableTDDoublo(htmlButtonUpdate(especialidade.id), htmlButtonDelete(especialidade.id))
+	    							 makeTableTD(centroCusto.id) +
+	    							 makeTableTD(centroCusto.codigo) +
+	    							 makeTableTD(centroCusto.descricao) +
+	    							 makeTableTD(centroCusto.detalhamento) +
+	    							 makeTableTD(formatarData(centroCusto.dataCadastro))+
+	    							 makeTableTDDoublo(htmlButtonUpdate(centroCusto.id), htmlButtonDelete(centroCusto.id))
 	    					 )		
 	    			 );
 	    		 }
@@ -186,16 +186,16 @@ $(document).ready(function(){
 
 	function salvar(){
 		
-		var especialidade = new Object();
+		var centroCusto = new Object();
 		
-		especialidade.descricao = $("[name = txtDescricao]").val();
-		especialidade.detalhamento = $("[name = txtDetalhamento]").val();
+		centroCusto.descricao = $("[name = txtDescricao]").val();
+		centroCusto.detalhamento = $("[name = txtDetalhamento]").val();
 		
-		var objEspecialidade = new Especialidade();
+		var requisicao = {operacao: 'SALVAR'};
 		
-		var json = objEspecialidade.salvar(especialidade);
+		var json = requisicaoAjax(centroCusto, requisicao, 'CentroCusto');
 
-		var especialidade = json.entidade;
+		var centroCusto = json.entidade;
 		var especialidades = json.entidades;
 		var mensagens = json.mensagens;
 		var semafaro = json.semafaro;
@@ -207,8 +207,8 @@ $(document).ready(function(){
 
 			$('#divBody').html("");
 			$('#divBody').append(
-					makeMensagemSucesso("Especialidade "
-							+ especialidade.descricao
+					makeMensagemSucesso("CentroCusto "
+							+ centroCusto.descricao
 							+ " salvo com sucesso!"));
 
 		} else if (semafaro == 'VERMELHO') {
@@ -230,21 +230,20 @@ $(document).ready(function(){
 	}
 	
 	
-	function excluir(especialidade){		
+	function excluir(centroCusto){		
 		
-		if(especialidade == null){
-			var especialidade = new Object();
+		if(centroCusto == null){
+			var centroCusto = new Object();
 			
-			especialidade.id = $("[name = txtId]").val();
-			especialidade.descricao = $("[name = txtDescricao]").val();
-			especialidade.detalhamento = $("[name = txtDetalhamento]").val();
+			centroCusto.id = $("[name = txtId]").val();
+			centroCusto.descricao = $("[name = txtDescricao]").val();
+			centroCusto.detalhamento = $("[name = txtDetalhamento]").val();
 		}
 		
-		var objEspecialidade = new Especialidade();
-		
-		var json = objEspecialidade.excluir(especialidade);
+		var requisicao = {operacao: 'EXCLUIR'};
+		var json = requisicaoAjax(centroCusto, requisicao, 'CentroCusto');
 	    	 
-		var especialidade = json.entidade;
+		var centroCusto = json.entidade;
 		var especialidades = json.entidades;
 		var mensagens = json.mensagens;
 		var semafaro = json.semafaro;
@@ -255,7 +254,7 @@ $(document).ready(function(){
     	 if(semafaro == 'VERDE'){
     		 
     		 $('#divBody').html("");
-    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " excluida com sucesso!"));
+    		 $('#divBody').append(makeMensagemSucesso("CentroCusto " + centroCusto.descricao + " excluida com sucesso!"));
     		 
     	 }else if(semafaro == 'VERMELHO'){
     		 
@@ -273,20 +272,20 @@ $(document).ready(function(){
     	 }
 	}
 	
-	function alterar(especialidade){
+	function alterar(centroCusto){
 		
-		if(especialidade == null){
-			var especialidade = new Object();	
+		if(centroCusto == null){
+			var centroCusto = new Object();	
 			
-			especialidade.id = $("[name = txtId]").val();
-			especialidade.descricao = $("[name = txtDescricao]").val();
-			especialidade.detalhamento = $("[name = txtDetalhamento]").val();
+			centroCusto.id = $("[name = txtId]").val();
+			centroCusto.descricao = $("[name = txtDescricao]").val();
+			centroCusto.detalhamento = $("[name = txtDetalhamento]").val();
 		}
 		
-		var objEspecialidade = new Especialidade();
-		var json = objEspecialidade.alterar(especialidade);
+		var requisicao = {operacao: 'ALTERAR'};
+		var json = requisicaoAjax(centroCusto, requisicao, 'CentroCusto');
 		
-		var especialidade = json.entidade;
+		var centroCusto = json.entidade;
 		var especialidades = json.entidades;
 		var mensagens = json.mensagens;
 		var semafaro = json.semafaro;
@@ -297,7 +296,7 @@ $(document).ready(function(){
     	 if(semafaro == 'VERDE'){
     		 
     		 $('#divBody').html("");
-    		 $('#divBody').append(makeMensagemSucesso("Especialidade " + especialidade.descricao + " alterada com sucesso!"));
+    		 $('#divBody').append(makeMensagemSucesso("Centro de Custo " + centroCusto.descricao + " alterada com sucesso!"));
     		 
     	 }else if(semafaro == 'VERMELHO'){
     		 
@@ -363,23 +362,23 @@ $(document).ready(function(){
 		"</div>" ;
 	}
 	
-	function montarAlterarExcluir(especialidade){
+	function montarAlterarExcluir(centroCusto){
 		
 		return "<div class='py-5'>" +
 		"<div class='container'>" +
 		"<div class='row'>" +
 		"<div class='col-md-8'>" +
 		"<h1 class='display-4'>Alterar</h1>" +
-		"<input type='hidden' name='txtId' value='" + especialidade.id + "'>" +
+		"<input type='hidden' name='txtId' value='" + centroCusto.id + "'>" +
 		"<ul class='list-group'>" +
 		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' id='lblCodigo'>Código</label>" +
 		"<strong>" +
-		"<label class='form-control' name='txtCodigo'>" + especialidade.codigo + "</label>" +
+		"<label class='form-control' name='txtCodigo'>" + centroCusto.codigo + "</label>" +
 		"</strong>" +
 		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' name='lblDescricao'>Descrição</label>" +
-		"<input class='form-control' type='text' name='txtDescricao' value='" + especialidade.descricao + "'> </li>" +
+		"<input class='form-control' type='text' name='txtDescricao' value='" + centroCusto.descricao + "'> </li>" +
 		"<li class='list-group-item form-inline'> <label class='form-control bg-secondary text-white' name='lblDetalhamento'>Detalhamento</label>" +
-		"<input class='form-control w-75' type='text' name='txtDetalhamento' value='" + especialidade.detalhamento + "'> </li>" +
+		"<input class='form-control w-75' type='text' name='txtDetalhamento' value='" + centroCusto.detalhamento + "'> </li>" +
 		"<li class='list-group-item form-inline'>" +
 		"<button class='btn btn-outline-warning form-control' name='operacao' id='operacao' value='alterar' style='width:49%'>Alterar</button>" +
 		"<button class='btn btn-outline-danger form-control' name='operacao' id='operacao' value='excluir' style='width:49%'>Excluir</button>" +
@@ -482,7 +481,7 @@ $(document).ready(function(){
 	//montar modal Alterar
 	function modalAlterarEspecialidade(){
 		
-		var especialidade = arguments;
+		var centroCusto = arguments;
 		
 		$("#divBody").prepend(
 		"<div class='modal fade' id='modalAdvertencia' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'>" +
@@ -494,9 +493,9 @@ $(document).ready(function(){
 		      "</div>" +
 		      "<div class='modal-body'>" +
 			      "<ul class='list-group'>" +
-		            "<li class='list-group-item'>Código " + especialidade.codigo + "</li>" +
-		            "<li class='list-group-item'>Descrição " + especialidade.descricao + "</li>" +
-		            "<li class='list-group-item'>Detalhamento " + especialidade.detalhamento + "</li>" +
+		            "<li class='list-group-item'>Código " + centroCusto.codigo + "</li>" +
+		            "<li class='list-group-item'>Descrição " + centroCusto.descricao + "</li>" +
+		            "<li class='list-group-item'>Detalhamento " + centroCusto.detalhamento + "</li>" +
 		            "<li class='list-group-item'>Porta ac consectetur</li>" +
 		          "</ul>" +
 		      "</div>" +

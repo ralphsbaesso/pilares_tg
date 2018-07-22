@@ -36,7 +36,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <h1 class="display-1">Especialidade</h1>
+          <h1 class="display-1">Centro de Custo</h1>
         </div>
       </div>
     </div>
@@ -49,8 +49,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
   <script src='js/componentes.js'></script>
   <script src='js/util.js'></script>
-  <script src='js/Especialidade.js'></script>
-  <script src='js/menu-especialidade.js'></script>
+  <script src='js/requisicao.js'></script>
+  <script src='js/centroCusto.js'></script>
 </body>
 
 </html>

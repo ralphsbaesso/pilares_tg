@@ -2,23 +2,27 @@ package dominio;
 
 public class CentroCusto extends Entidade {
 	
-	private String numeroCC;
-	private String nome;
-
-	public String getNumeroCC() {
-		return numeroCC;
+	private String codigo;
+	private String descricao;
+	private String detalhamento;
+	
+	public String getCodigo() {
+		return codigo;
 	}
-
-	public String getNome() {
-		return nome;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
+	public String getDescricao() {
+		return descricao;
 	}
-
-	public void setNumeroCC(String numeroCC) {
-		this.numeroCC = numeroCC;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	public String getDetalhamento() {
+		return detalhamento;
+	}
+	public void setDetalhamento(String detalhamento) {
+		this.detalhamento = detalhamento;
 	}
 	
 }

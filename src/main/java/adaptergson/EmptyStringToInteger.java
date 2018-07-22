@@ -2,14 +2,12 @@ package adaptergson;
 
 import java.io.IOException;
 
-import org.apache.commons.lang3.math.NumberUtils;
-
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
-public class EmptyStringToNumber extends TypeAdapter<Number> {
+public class EmptyStringToInteger extends TypeAdapter<Number> {
 
 	@Override
 	public void write(JsonWriter jsonWriter, Number number) throws IOException {
@@ -30,12 +28,10 @@ public class EmptyStringToNumber extends TypeAdapter<Number> {
 
          try {
              String value = jsonReader.nextString();
-             if ("".equals(value)) {
-                 return 0;
-             }
-             return NumberUtils.createNumber(value);
+             
+             return Integer.valueOf(value);
          } catch (NumberFormatException e) {
-        	 
+        	 System.err.println("Formato não valido para Integer");
         	 return Integer.MIN_VALUE;
          }
      }
